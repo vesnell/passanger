@@ -7,4 +7,5 @@ public interface PassengerInterface {
     String TRACK = "Trasa";
     String CONN_SEARCH = "WyszukiwaniePolaczen";
     String FILTER = "StacjeFiltrRead";
+    String INPUT_TEXT = "wprowadzonyTekst";
 }

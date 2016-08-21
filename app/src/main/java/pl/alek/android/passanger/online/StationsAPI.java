@@ -19,6 +19,6 @@ public interface StationsAPI {
     Call<List<Station>> loadData(
             @Path("search") String search,
             @Path("filter") String filter,
-            @Query(value="wprowadzonyTekst", encoded=true) String stationName
+            @Query(value=PassengerInterface.INPUT_TEXT, encoded=true) String stationName
     );
 }

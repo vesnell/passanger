@@ -28,10 +28,9 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Sta
     }
 
     private void sendRequest(String stationName) {
-        ServiceGenerator.setClient(this);
         HttpCallback httpCallback = new HttpCallback(this);
         httpCallback.setStationName(stationName);
-        ServiceGenerator.sendRequest(httpCallback);
+        ServiceGenerator.sendRequest(this, httpCallback);
     }
 
     @Override
