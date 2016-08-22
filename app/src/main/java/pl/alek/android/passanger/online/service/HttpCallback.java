@@ -45,7 +45,7 @@ public class HttpCallback implements Callback {
     @Override
     public void onResponse(Call c, Response response) throws IOException {
         StationsAPI stations = ServiceGenerator.createService(StationsAPI.class);
-        retrofit2.Call<ArrayList<Station>> call = stations.loadData(search, filter, stationName);
+        retrofit2.Call<ArrayList<Station>> call = stations.loadStations(search, filter, stationName);
         call.enqueue(callback);
     }
 }

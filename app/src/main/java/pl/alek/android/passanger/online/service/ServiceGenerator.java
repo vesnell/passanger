@@ -1,6 +1,7 @@
 package pl.alek.android.passanger.online.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -54,10 +55,11 @@ public class ServiceGenerator {
 
     private static OkHttpClient setClient(Context ctx) {
         instantCookie(ctx);
-        client = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder
                 .cookieJar(cookie)
-                .addInterceptor(addLog())
-                .build();
+                .addInterceptor(addLog());
+        client = builder.build();
         return client;
     }
 

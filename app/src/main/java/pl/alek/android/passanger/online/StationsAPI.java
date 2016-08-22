@@ -16,7 +16,7 @@ public interface StationsAPI {
     @Headers({"X-Requested-With:XMLHttpRequest",
             "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/51.0.2704.79 Chrome/51.0.2704.79 Safari/537.36"})
     @GET("/{search}/{filter}")
-    Call<ArrayList<Station>> loadData(
+    Call<ArrayList<Station>> loadStations(
             @Path("search") String search,
             @Path("filter") String filter,
             @Query(value=PassengerInterface.INPUT_TEXT, encoded=true) String stationName

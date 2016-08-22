@@ -8,4 +8,5 @@ public interface PassengerInterface {
     String CONN_SEARCH = "WyszukiwaniePolaczen";
     String FILTER = "StacjeFiltrRead";
     String INPUT_TEXT = "wprowadzonyTekst";
+    String DOWNLOAD = "Pobierz";
 }

@@ -22,7 +22,6 @@ public class StationsListActivity extends AppCompatActivity {
     @Bind(R.id.rvStationsList)
     RecyclerView rvStationsList;
 
-    private LinearLayoutManager mLayoutManager;
     private StationsListAdapter mAdapter;
 
     @Override
@@ -35,10 +34,9 @@ public class StationsListActivity extends AppCompatActivity {
         ArrayList<Station> stations = (ArrayList<Station>) bundle.getSerializable(Station.LIST);
 
         rvStationsList.setHasFixedSize(true);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvStationsList.setLayoutManager(mLayoutManager);
-        // specify an adapter (see also next example)
+
         mAdapter = new StationsListAdapter(this, stations);
         rvStationsList.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new StationsListAdapter.OnItemClickListener() {
