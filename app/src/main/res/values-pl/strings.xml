@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">passenger</string>
+    <string name="input_station_name">Wprowadź nazwę stacji:</string>
+    <string name="hint_station_name">Nazwa stacji</string>
+    <string name="btn_search">Szukaj</string>
+</resources>
