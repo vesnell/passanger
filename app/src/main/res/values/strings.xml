@@ -3,4 +3,5 @@
     <string name="input_station_name">Input station name:</string>
     <string name="hint_station_name">Station name</string>
     <string name="btn_search">Search</string>
+    <string name="station_not_found">Station not found</string>
 </resources>
