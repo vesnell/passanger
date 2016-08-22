@@ -9,4 +9,9 @@
     <dimen name="btn_flat_min_height">36dp</dimen>
     <dimen name="btn_flat_padding">8dp</dimen>
     <dimen name="btn_flat_margin">4dp</dimen>
+
+    <dimen name="list_horizontal_margin_normal">8dp</dimen>
+    <dimen name="list_vertical_margin_normal">8dp</dimen>
+    <dimen name="list_project_item_height">32dp</dimen>
+    <dimen name="list_padding_left">48dp</dimen>
 </resources>

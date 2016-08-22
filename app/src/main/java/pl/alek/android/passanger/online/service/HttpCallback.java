@@ -3,7 +3,7 @@ package pl.alek.android.passanger.online.service;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -22,12 +22,12 @@ public class HttpCallback implements Callback {
     private static final String TAG = "HttpCallback";
 
     private CookieJar cookie;
-    private retrofit2.Callback<List<Station>> callback;
+    private retrofit2.Callback<ArrayList<Station>> callback;
     private String stationName = "";
     private String search;
     private String filter;
 
-    public HttpCallback(retrofit2.Callback<List<Station>> callback) {
+    public HttpCallback(retrofit2.Callback<ArrayList<Station>> callback) {
         this.callback = callback;
     }
 
@@ -45,7 +45,7 @@ public class HttpCallback implements Callback {
     @Override
     public void onResponse(Call c, Response response) throws IOException {
         StationsAPI stations = ServiceGenerator.createService(StationsAPI.class);
-        retrofit2.Call<List<Station>> call = stations.loadData(search, filter, stationName);
+        retrofit2.Call<ArrayList<Station>> call = stations.loadData(search, filter, stationName);
         call.enqueue(callback);
     }
 }

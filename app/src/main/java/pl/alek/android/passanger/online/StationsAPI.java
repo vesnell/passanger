@@ -1,6 +1,6 @@
 package pl.alek.android.passanger.online;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import pl.alek.android.passanger.model.Station;
 import retrofit2.Call;
@@ -16,7 +16,7 @@ public interface StationsAPI {
     @Headers({"X-Requested-With:XMLHttpRequest",
             "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/51.0.2704.79 Chrome/51.0.2704.79 Safari/537.36"})
     @GET("/{search}/{filter}")
-    Call<List<Station>> loadData(
+    Call<ArrayList<Station>> loadData(
             @Path("search") String search,
             @Path("filter") String filter,
             @Query(value=PassengerInterface.INPUT_TEXT, encoded=true) String stationName

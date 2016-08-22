@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/stationName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/list_horizontal_margin_normal"
+        android:layout_marginRight="@dimen/list_horizontal_margin_normal"
+        android:layout_marginTop="@dimen/list_vertical_margin_normal"
+        android:layout_marginBottom="@dimen/list_vertical_margin_normal"
+        android:paddingLeft="@dimen/list_padding_left"
+        android:textColor="@color/item_list_text_color"
+        android:background="@drawable/item_list_bg"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightGrey"/>
+</LinearLayout>

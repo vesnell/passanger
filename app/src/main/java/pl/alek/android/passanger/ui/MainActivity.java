@@ -1,15 +1,18 @@
 package pl.alek.android.passanger.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements Callback<List<Station>> {
+public class MainActivity extends AppCompatActivity implements Callback<ArrayList<Station>> {
 
     private static final String TAG = "MainActivity";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -31,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Sta
     EditText etStationSearch;
     @Bind(R.id.btnStationSearch)
     Button btnStationSearch;
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Sta
     public void submit() {
         String station = etStationSearch.getText().toString();
         sendRequest(station);
+        setProgressBarVisible(true);
     }
 
     private void sendRequest(String stationName) {
@@ -73,14 +79,15 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Sta
     }
 
     @Override
-    public void onResponse(Call<List<Station>> call, Response<List<Station>> response) {
+    public void onResponse(Call<ArrayList<Station>> call, Response<ArrayList<Station>> response) {
+        setProgressBarVisible(false);
         if (response.code() == 200) {
-            List<Station> stations = response.body();
+            ArrayList<Station> stations = response.body();
             if (stations.size() == 1) {
                 Station station = stations.get(0);
-                //open StationInfoActivity
+                openStationInfoActivity(station);
             } else if (stations.size() > 0) {
-                //open ListStationsActivity
+                openStationsListActivity(stations);
             } else {
                 Toast.makeText(this, R.string.station_not_found, Toast.LENGTH_LONG).show();
             }
@@ -88,7 +95,30 @@ public class MainActivity extends AppCompatActivity implements Callback<List<Sta
     }
 
     @Override
-    public void onFailure(Call<List<Station>> call, Throwable t) {
+    public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
+        setProgressBarVisible(false);
         Log.e(TAG, t.getMessage());
+    }
+
+    private void setProgressBarVisible(boolean isVisible) {
+        if (isVisible) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void openStationInfoActivity(Station station) {
+        Intent i = new Intent(this, StationInfoActivity.class);
+        i.putExtra(Station.NAME, station);
+        startActivity(i);
+    }
+
+    private void openStationsListActivity(ArrayList<Station> stations) {
+        Intent intent = new Intent(this, StationsListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Station.LIST, stations);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
