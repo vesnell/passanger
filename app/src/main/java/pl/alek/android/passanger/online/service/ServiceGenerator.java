@@ -43,7 +43,9 @@ public class ServiceGenerator {
     }
 
     public static void sendRequest(Context ctx, Callback callback) {
-        setClient(ctx);
+        if (client == null) {
+            setClient(ctx);
+        }
         Request request = new Request.Builder()
                 .url(TRACK_URL)
                 .build();
