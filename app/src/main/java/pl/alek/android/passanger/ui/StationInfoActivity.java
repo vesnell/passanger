@@ -32,6 +32,10 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
         Toast.makeText(this, station.Nazwa, Toast.LENGTH_LONG).show();
 
+        sendRequest(station);
+    }
+
+    private void sendRequest(Station station) {
         StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
         Map<String, Object> params = getParams(station.ID);
         Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
@@ -43,6 +47,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         params.put("stacjaID", stationID);
         params.put("odjazdy", true);
         params.put("dostepneKH", "IC,IC;R,PR;EIC,IC;TLK,IC;EIP,IC;Os,KS;Os,KM;IR,PR;");
+        params.put("__RequestVerificationToken", ServiceGenerator.reqVerToken);
         return params;
     }
 

@@ -32,6 +32,7 @@ public class ServiceGenerator {
 
     public static ClearableCookieJar cookie;
     public static OkHttpClient client;
+    public static String reqVerToken;
 
     public static <S> S createService(Class<S> serviceClass) {
         Retrofit retrofit = new Retrofit.Builder()
