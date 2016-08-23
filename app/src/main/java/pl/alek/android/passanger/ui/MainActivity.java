@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
                 Station station = stations.get(0);
                 openStationInfoActivity(station);
             } else if (stations.size() > 0) {
+                Collections.sort(stations);
                 openStationsListActivity(stations);
             } else {
                 Toast.makeText(this, R.string.station_not_found, Toast.LENGTH_LONG).show();

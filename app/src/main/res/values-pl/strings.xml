@@ -4,4 +4,11 @@
     <string name="hint_station_name">Nazwa stacji</string>
     <string name="btn_search">Szukaj</string>
     <string name="station_not_found">Nie znaleziono żadnej stacji</string>
+
+    <string name="departure_hour">Odjazd:</string>
+    <string name="btn_inconvenience_cause">Przyczyny</string>
+    <string name="platform_track">Peron/Tor:</string>
+    <string name="carrier">Przewoźnik:</string>
+    <string name="train_number">Nr pociągu:</string>
+    <string name="route">Relacja:</string>
 </resources>

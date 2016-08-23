@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by Lenovo on 17.08.2016.
  */
-public class Station implements Serializable {
+public class Station implements Serializable, Comparable<Station> {
 
     public static final String LIST = "stationsList";
     public static final String NAME = "station";
@@ -19,4 +19,9 @@ public class Station implements Serializable {
     public Double SzerokoscGeograficzna;
     public Double DlugoscGeograficzna;
     public String KrajKod;
+
+    @Override
+    public int compareTo(Station station) {
+        return this.Nazwa.compareTo(station.Nazwa);
+    }
 }

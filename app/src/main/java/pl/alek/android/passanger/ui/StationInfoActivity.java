@@ -2,17 +2,22 @@ package pl.alek.android.passanger.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import pl.alek.android.passanger.R;
 import pl.alek.android.passanger.model.ServerInfoResponse;
 import pl.alek.android.passanger.model.Station;
 import pl.alek.android.passanger.online.service.ServiceGenerator;
 import pl.alek.android.passanger.online.service.StationInfoAPI;
+import pl.alek.android.passanger.online.utils.HttpUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,10 +29,18 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
     private static final String TAG = "StationInfoActivity";
 
+    @Bind(R.id.progressBar)
+    ProgressBar progressBar;
+    @Bind(R.id.rvStationInfoList)
+    RecyclerView rvStationInfoList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_info);
+        ButterKnife.bind(this);
+
+        setProgressBarVisible(true);
 
         Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
         Toast.makeText(this, station.Nazwa, Toast.LENGTH_LONG).show();
@@ -37,24 +50,17 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
     private void sendRequest(Station station) {
         StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
-        Map<String, Object> params = getParams(station.ID);
+        Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
         Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
         call.enqueue(this);
     }
 
-    private Map<String, Object> getParams(Integer stationID) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("stacjaID", stationID);
-        params.put("odjazdy", true);
-        params.put("dostepneKH", "IC,IC;R,PR;EIC,IC;TLK,IC;EIP,IC;Os,KS;Os,KM;IR,PR;");
-        params.put("__RequestVerificationToken", ServiceGenerator.reqVerToken);
-        return params;
-    }
-
     @Override
     public void onResponse(Call<ServerInfoResponse> call, Response<ServerInfoResponse> response) {
+        setProgressBarVisible(false);
         if (response.body() != null) {
-            Log.d(TAG, response.body().toString());
+            ServerInfoResponse serverInfoResponse = response.body();
+            Log.d(TAG, serverInfoResponse.Rozklad.get(0).Godzina);
         } else {
             Log.e(TAG, response.message());
         }
@@ -62,6 +68,17 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
     @Override
     public void onFailure(Call<ServerInfoResponse> call, Throwable t) {
+        setProgressBarVisible(false);
         Log.e(TAG, t.getMessage());
+    }
+
+    private void setProgressBarVisible(boolean isVisible) {
+        if (isVisible) {
+            progressBar.setVisibility(View.VISIBLE);
+            rvStationInfoList.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            rvStationInfoList.setVisibility(View.VISIBLE);
+        }
     }
 }

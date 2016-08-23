@@ -22,4 +22,16 @@
         <item name="android:layout_marginRight">@dimen/btn_flat_margin</item>
     </style>
 
+    <style name="AppCompat.TextView.Label" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="AppCompat.TextView.Label.Small">
+        <item name="android:textSize">@dimen/label_small</item>
+    </style>
+
+    <style name="AppCompat.TextView.Label.Normal">
+        <item name="android:textSize">@dimen/label_normal</item>
+    </style>
+
 </resources>
