@@ -67,7 +67,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mTextView.setText(mDataset.get(position).Nazwa);
 
-        int height = (int) mContext.getResources().getDimension(R.dimen.list_project_item_height);
+        int height = (int) mContext.getResources().getDimension(R.dimen.list_station_item_height);
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, height);
         holder.mTextView.setLayoutParams(params);
     }

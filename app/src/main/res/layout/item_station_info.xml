@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
+        android:id="@+id/llRailInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/list_padding"
@@ -34,15 +35,13 @@
                         android:id="@+id/tvPlannedHour"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="16:59"/>
+                        android:gravity="center_horizontal" />
                     <TextView
                         style="@style/AppCompat.TextView.Label.Normal"
                         android:id="@+id/tvDelayedHour"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text="17:00 (+1)"/>
+                        android:gravity="center_horizontal" />
                 </LinearLayout>
             </LinearLayout>
             <Button
@@ -79,8 +78,7 @@
                         android:id="@+id/tvPlatformTrack"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="I4"/>
+                        android:gravity="center" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -97,8 +95,7 @@
                         android:id="@+id/tvCarrier"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="KM"/>
+                        android:gravity="center" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
@@ -115,8 +112,7 @@
                         android:id="@+id/tvTrainNo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="91982"/>
+                        android:gravity="center" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -134,8 +130,7 @@
                     android:id="@+id/tvRoute"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="WARSZAWA WSCHODNIA - GRODZISK MAZOWIECKI"/>
+                    android:gravity="center_vertical" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

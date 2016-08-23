@@ -13,7 +13,7 @@ public class RailInfo {
     public Integer StacjaKoncowaID;
     public boolean PosiadaWykonanie;
     public String KategoriaHandlowaSymbol;
-    public String PrzwoznikSkrot;
+    public String PrzewoznikSkrot;
     public String NrPociagu;
     public Integer RelacjaPoczatkowaID;
     public String RelacjaPoczatkowaNazwa;
@@ -35,4 +35,25 @@ public class RailInfo {
     public String StacjaKoncowaTor;
     public String StacjePosrednie;
     public boolean KomunikacjaZastepcza;
+
+    private String getHour(String godzina) {
+        String time = godzina.split("\\(|\\)")[1];
+        return time;
+    }
+
+    public String getDelayedHourLabel() {
+        return getHour(Godzina) + " (+" + Opoznienie + ")";
+    }
+
+    public String getPlannedHourLabel() {
+        return getHour(GodzinaPlanowa);
+    }
+
+    public String getPlatformTrack() {
+        return StacjaPoczatkowaPeron + StacjaPoczatkowaTor;
+    }
+
+    public String getRoute() {
+        return RelacjaPoczatkowaNazwa + " - " + RelacjaKoncowaNazwa;
+    }
 }

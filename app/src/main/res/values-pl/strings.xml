@@ -4,6 +4,7 @@
     <string name="hint_station_name">Nazwa stacji</string>
     <string name="btn_search">Szukaj</string>
     <string name="station_not_found">Nie znaleziono żadnej stacji</string>
+    <string name="stations_list">Lista stacji</string>
 
     <string name="departure_hour">Odjazd:</string>
     <string name="btn_inconvenience_cause">Przyczyny</string>

@@ -4,6 +4,7 @@
     <string name="hint_station_name">Station name</string>
     <string name="btn_search">Search</string>
     <string name="station_not_found">Station not found</string>
+    <string name="stations_list">Stations list</string>
 
     <string name="departure_hour">Departure:</string>
     <string name="btn_inconvenience_cause">Causes</string>

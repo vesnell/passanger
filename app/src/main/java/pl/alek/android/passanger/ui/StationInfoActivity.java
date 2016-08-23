@@ -2,17 +2,20 @@ package pl.alek.android.passanger.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passanger.R;
+import pl.alek.android.passanger.model.RailInfo;
 import pl.alek.android.passanger.model.ServerInfoResponse;
 import pl.alek.android.passanger.model.Station;
 import pl.alek.android.passanger.online.service.ServiceGenerator;
@@ -34,6 +37,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     @Bind(R.id.rvStationInfoList)
     RecyclerView rvStationInfoList;
 
+    private StationInfoAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +47,12 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
         setProgressBarVisible(true);
 
+        rvStationInfoList.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvStationInfoList.setLayoutManager(mLayoutManager);
+
         Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
-        Toast.makeText(this, station.Nazwa, Toast.LENGTH_LONG).show();
+        setTitle(station.Nazwa);
 
         sendRequest(station);
     }
@@ -60,7 +69,9 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         setProgressBarVisible(false);
         if (response.body() != null) {
             ServerInfoResponse serverInfoResponse = response.body();
-            Log.d(TAG, serverInfoResponse.Rozklad.get(0).Godzina);
+            List<RailInfo> scheduleList = serverInfoResponse.Rozklad;
+            mAdapter = new StationInfoAdapter(this, scheduleList);
+            rvStationInfoList.setAdapter(mAdapter);
         } else {
             Log.e(TAG, response.message());
         }

@@ -12,7 +12,8 @@
 
     <dimen name="list_horizontal_margin_normal">8dp</dimen>
     <dimen name="list_vertical_margin_normal">8dp</dimen>
-    <dimen name="list_project_item_height">32dp</dimen>
+    <dimen name="list_station_item_height">32dp</dimen>
+    <dimen name="list_station_info_item_height">96dp</dimen>
     <dimen name="list_padding_left">48dp</dimen>
     <dimen name="list_padding">8dp</dimen>
     <dimen name="label_small">8sp</dimen>

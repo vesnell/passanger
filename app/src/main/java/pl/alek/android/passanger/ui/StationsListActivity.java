@@ -30,6 +30,8 @@ public class StationsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_stations_list);
         ButterKnife.bind(this);
 
+        setTitle(R.string.stations_list);
+
         Bundle bundle = getIntent().getExtras();
         ArrayList<Station> stations = (ArrayList<Station>) bundle.getSerializable(Station.LIST);
 
