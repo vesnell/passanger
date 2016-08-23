@@ -1,6 +1,7 @@
 package pl.alek.android.passanger.ui;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,13 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
         RailInfo railInfo = mDataset.get(position);
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
-        holder.tvDelayedHour.setText(railInfo.getDelayedHourLabel());
+        if (railInfo.getDelayedHourLabel() != null) {
+            holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvDelayedHour.setText(railInfo.getDelayedHourLabel());
+        } else {
+            holder.tvDelayedHour.setVisibility(View.GONE);
+            holder.btnCauses.setVisibility(View.GONE);
+        }
         holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
         holder.tvCarrier.setText(railInfo.PrzewoznikSkrot);
         holder.tvTrainNo.setText(railInfo.NrPociagu);

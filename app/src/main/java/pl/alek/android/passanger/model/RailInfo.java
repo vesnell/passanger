@@ -56,10 +56,12 @@ public class RailInfo {
     }
 
     public String getDelayedHourLabel() {
-        if (Opoznienie >= 0) {
+        if (Opoznienie > 0) {
             return getHour(Godzina) + " (+" + Opoznienie + ")";
-        } else {
+        } else if (Opoznienie < 0){
             return getHour(Godzina) + " (" + Opoznienie + ")";
+        } else {
+            return null;
         }
     }
 
