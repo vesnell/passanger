@@ -1,11 +1,20 @@
 package pl.alek.android.passanger.model;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Lenovo on 23.08.2016.
  */
 public class RailInfo {
+
+    private static final String DATE_FORMAT = "HH:mm";
+    private static final String TIMEZONE = "UTC";
+
     public Integer RozkladID;
     public String ZamowienieSKRJID;
     public String DataPlanowa;
@@ -38,11 +47,20 @@ public class RailInfo {
 
     private String getHour(String godzina) {
         String time = godzina.split("\\(|\\)")[1];
-        return time;
+        long timeInMillis = Long.parseLong(time);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
+        Timestamp timestamp = new Timestamp(timeInMillis);
+        String t = dateFormat.format(timestamp);
+        return t;
     }
 
     public String getDelayedHourLabel() {
-        return getHour(Godzina) + " (+" + Opoznienie + ")";
+        if (Opoznienie >= 0) {
+            return getHour(Godzina) + " (+" + Opoznienie + ")";
+        } else {
+            return getHour(Godzina) + " (" + Opoznienie + ")";
+        }
     }
 
     public String getPlannedHourLabel() {
