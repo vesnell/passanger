@@ -23,7 +23,7 @@
     </style>
 
     <style name="AppCompat.TextView.Label" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/darkBlue</item>
     </style>
 
     <style name="AppCompat.TextView.Label.Small">

@@ -86,7 +86,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
             holder.tvDelayedHour.setVisibility(View.VISIBLE);
         } else {
             holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.green));
+            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
             holder.tvDelayedHour.setVisibility(View.GONE);
         }
         final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
