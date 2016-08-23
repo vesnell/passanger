@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
     private Context mContext;
     private List<RailInfo> mDataset = new ArrayList<RailInfo>();
+    private List<String> mDelayCauses = new ArrayList<String>();
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.llRailInfo)
@@ -51,9 +53,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         }
     }
 
-    public StationInfoAdapter(Context context, List<RailInfo> myDataset) {
+    public StationInfoAdapter(Context context, List<RailInfo> myDataset, List<String> delayCauses) {
         mDataset = myDataset;
         mContext = context;
+        mDelayCauses = delayCauses;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
             holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
             holder.tvDelayedHour.setVisibility(View.GONE);
         }
-        List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
+        final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
         if (delayCauses.size() == 0) {
            holder.btnCauses.setVisibility(View.GONE);
         } else {
@@ -91,6 +94,18 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         holder.tvCarrier.setText(railInfo.PrzewoznikSkrot);
         holder.tvTrainNo.setText(railInfo.NrPociagu);
         holder.tvRoute.setText(railInfo.getRoute());
+
+        holder.btnCauses.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dCause = "";
+                for (List<String> cause : delayCauses) {
+                    int nrOfCause = Integer.parseInt(cause.get(1));
+                    dCause += mDelayCauses.get(nrOfCause) + "\n";
+                }
+                Toast.makeText(mContext, dCause, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

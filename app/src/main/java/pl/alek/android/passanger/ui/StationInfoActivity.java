@@ -70,7 +70,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         if (response.body() != null) {
             ServerInfoResponse serverInfoResponse = response.body();
             List<RailInfo> scheduleList = serverInfoResponse.Rozklad;
-            mAdapter = new StationInfoAdapter(this, scheduleList);
+            mAdapter = new StationInfoAdapter(this, scheduleList, serverInfoResponse.Utrudnienia);
             rvStationInfoList.setAdapter(mAdapter);
         } else {
             Log.e(TAG, response.message());
