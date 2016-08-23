@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/list_padding"
-        android:background="@drawable/item_list_bg">
+        android:background="@color/white">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -21,28 +21,18 @@
                 android:orientation="vertical"
                 android:gravity="center_vertical">
                 <TextView
-                    style="@style/AppCompat.TextView.Label.Small"
+                    style="@style/AppCompat.TextView.Label.Bold"
+                    android:id="@+id/tvPlannedHour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/departure_hour"/>
-                <LinearLayout
+                    android:gravity="center_horizontal" />
+                <TextView
+                    style="@style/AppCompat.TextView.Label.Bold"
+                    android:id="@+id/tvDelayedHour"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center_vertical">
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Normal"
-                        android:id="@+id/tvPlannedHour"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal" />
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Normal"
-                        android:id="@+id/tvDelayedHour"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal" />
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/red"/>
             </LinearLayout>
             <Button
                 android:id="@+id/btnCauses"
@@ -61,76 +51,48 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Small"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/platform_track"/>
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Normal"
-                        android:id="@+id/tvPlatformTrack"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Small"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/carrier"/>
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Normal"
-                        android:id="@+id/tvCarrier"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Small"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/train_number"/>
-                    <TextView
-                        style="@style/AppCompat.TextView.Label.Normal"
-                        android:id="@+id/tvTrainNo"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center" />
-                </LinearLayout>
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    style="@style/AppCompat.TextView.Label.Normal"
+                    android:id="@+id/tvStartStation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/list_padding"/>
+                <TextView
+                    style="@style/AppCompat.TextView.Label.Bold"
+                    android:id="@+id/tvEndStation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/list_item_info_padding_left"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    style="@style/AppCompat.TextView.Label.Small"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/route"/>
+                android:orientation="horizontal">
                 <TextView
                     style="@style/AppCompat.TextView.Label.Normal"
-                    android:id="@+id/tvRoute"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvPlatformTrack"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical" />
+                    android:layout_weight="1"
+                    android:gravity="center" />
+                <TextView
+                    style="@style/AppCompat.TextView.Label.Normal"
+                    android:id="@+id/tvCarrier"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+                <TextView
+                    style="@style/AppCompat.TextView.Label.Normal"
+                    android:id="@+id/tvTrainNo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -2,6 +2,7 @@ package pl.alek.android.passanger.ui;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +45,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         TextView tvCarrier;
         @Bind(R.id.tvTrainNo)
         TextView tvTrainNo;
-        @Bind(R.id.tvRoute)
-        TextView tvRoute;
+        @Bind(R.id.tvStartStation)
+        TextView tvStartStation;
+        @Bind(R.id.tvEndStation)
+        TextView tvEndStation;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -78,10 +81,12 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         String delayHourLabel = railInfo.getDelayedHourLabel();
         if (delayHourLabel != null) {
             holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.black));
             holder.tvDelayedHour.setText(railInfo.getDelayedHourLabel());
             holder.tvDelayedHour.setVisibility(View.VISIBLE);
         } else {
             holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.green));
             holder.tvDelayedHour.setVisibility(View.GONE);
         }
         final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
@@ -93,7 +98,8 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
         holder.tvCarrier.setText(railInfo.PrzewoznikSkrot);
         holder.tvTrainNo.setText(railInfo.NrPociagu);
-        holder.tvRoute.setText(railInfo.getRoute());
+        holder.tvStartStation.setText(railInfo.RelacjaPoczatkowaNazwa);
+        holder.tvEndStation.setText(railInfo.getEndStation());
 
         holder.btnCauses.setOnClickListener(new View.OnClickListener() {
             @Override

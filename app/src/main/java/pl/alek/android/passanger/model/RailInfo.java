@@ -73,7 +73,7 @@ public class RailInfo {
         return StacjaPoczatkowaPeron + StacjaPoczatkowaTor;
     }
 
-    public String getRoute() {
-        return RelacjaPoczatkowaNazwa + " - " + RelacjaKoncowaNazwa;
+    public String getEndStation() {
+        return " - " + RelacjaKoncowaNazwa;
     }
 }

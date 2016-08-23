@@ -6,10 +6,5 @@
     <string name="station_not_found">Station not found</string>
     <string name="stations_list">Stations list</string>
 
-    <string name="departure_hour">Departure:</string>
-    <string name="btn_inconvenience_cause">Causes</string>
-    <string name="platform_track">Platform/Track:</string>
-    <string name="carrier">Carrier:</string>
-    <string name="train_number">Train no:</string>
-    <string name="route">Route:</string>
+    <string name="btn_inconvenience_cause">Info</string>
 </resources>

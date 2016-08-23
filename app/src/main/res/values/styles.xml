@@ -34,4 +34,9 @@
         <item name="android:textSize">@dimen/label_normal</item>
     </style>
 
+    <style name="AppCompat.TextView.Label.Bold">
+        <item name="android:textSize">@dimen/label_big</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>
