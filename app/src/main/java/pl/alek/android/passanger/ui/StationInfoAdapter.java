@@ -41,8 +41,6 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         Button btnCauses;
         @Bind(R.id.tvPlatformTrack)
         TextView tvPlatformTrack;
-        @Bind(R.id.tvCarrier)
-        TextView tvCarrier;
         @Bind(R.id.tvTrainNo)
         TextView tvTrainNo;
         @Bind(R.id.tvStartStation)
@@ -96,8 +94,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
             holder.btnCauses.setVisibility(View.VISIBLE);
         }
         holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
-        holder.tvCarrier.setText(railInfo.PrzewoznikSkrot);
-        holder.tvTrainNo.setText(railInfo.NrPociagu);
+        holder.tvTrainNo.setText(railInfo.getCarrier());
         holder.tvStartStation.setText(railInfo.RelacjaPoczatkowaNazwa);
         holder.tvEndStation.setText(railInfo.getEndStation());
 

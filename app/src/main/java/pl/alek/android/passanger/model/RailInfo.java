@@ -70,10 +70,14 @@ public class RailInfo {
     }
 
     public String getPlatformTrack() {
-        return StacjaPoczatkowaPeron + StacjaPoczatkowaTor;
+        return StacjaPoczatkowaPeron + " / " + StacjaPoczatkowaTor;
     }
 
     public String getEndStation() {
-        return " - " + RelacjaKoncowaNazwa;
+        return "\u21B3 " + RelacjaKoncowaNazwa;
+    }
+
+    public String getCarrier() {
+        return PrzewoznikSkrot + ":" + NrPociagu;
     }
 }

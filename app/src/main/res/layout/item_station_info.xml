@@ -79,19 +79,16 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center" />
-                <TextView
-                    style="@style/AppCompat.TextView.Label.Normal"
-                    android:id="@+id/tvCarrier"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center" />
+                    android:layout_weight="1"/>
                 <TextView
                     style="@style/AppCompat.TextView.Label.Normal"
                     android:id="@+id/tvTrainNo"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center" />
             </LinearLayout>
         </LinearLayout>
