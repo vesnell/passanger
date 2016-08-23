@@ -72,12 +72,20 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
         RailInfo railInfo = mDataset.get(position);
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
-        if (railInfo.getDelayedHourLabel() != null) {
+        String delayHourLabel = railInfo.getDelayedHourLabel();
+        if (delayHourLabel != null) {
             holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             holder.tvDelayedHour.setText(railInfo.getDelayedHourLabel());
+            holder.tvDelayedHour.setVisibility(View.VISIBLE);
         } else {
+            holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
             holder.tvDelayedHour.setVisibility(View.GONE);
-            holder.btnCauses.setVisibility(View.GONE);
+        }
+        List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
+        if (delayCauses.size() == 0) {
+           holder.btnCauses.setVisibility(View.GONE);
+        } else {
+            holder.btnCauses.setVisibility(View.VISIBLE);
         }
         holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
         holder.tvCarrier.setText(railInfo.PrzewoznikSkrot);
