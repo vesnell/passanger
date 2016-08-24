@@ -2,8 +2,10 @@ package pl.alek.android.passanger.ui;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -100,8 +102,21 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
             sendRequest(station);
             setProgressBarVisible(true);
         } else {
-            //show Dialog
+            showAlertDialog();
         }
+    }
+
+    private void showAlertDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.alert_title_search)
+                .setMessage(R.string.alert_msg_search)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void sendRequest(String stationName) {

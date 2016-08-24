@@ -7,4 +7,6 @@
     <string name="stations_list">Stations list</string>
 
     <string name="btn_inconvenience_cause">Info</string>
+    <string name="alert_title_search">Attention!</string>
+    <string name="alert_msg_search">You have to enter at least 3 letters</string>
 </resources>
