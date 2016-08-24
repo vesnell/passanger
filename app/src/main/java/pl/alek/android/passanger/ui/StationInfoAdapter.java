@@ -77,22 +77,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         RailInfo railInfo = mDataset.get(position);
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
         String delayHourLabel = railInfo.getDelayedHourLabel();
-        if (delayHourLabel != null) {
-            holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.black));
-            holder.tvDelayedHour.setText(railInfo.getDelayedHourLabel());
-            holder.tvDelayedHour.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvPlannedHour.setPaintFlags(holder.tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-            holder.tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
-            holder.tvDelayedHour.setVisibility(View.GONE);
-        }
+        setPlannedHour(holder.tvPlannedHour, holder.tvDelayedHour, delayHourLabel);
+        setDelayedColor(holder.tvDelayedHour, railInfo.Opoznienie);
         final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
-        if (delayCauses.size() == 0) {
-           holder.btnCauses.setVisibility(View.GONE);
-        } else {
-            holder.btnCauses.setVisibility(View.VISIBLE);
-        }
+        setGoneBtn(holder.btnCauses, delayCauses.size() == 0);
         holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
         holder.tvTrainNo.setText(railInfo.getCarrier());
         holder.tvStartStation.setText(railInfo.RelacjaPoczatkowaNazwa);
@@ -109,6 +97,37 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
                 Toast.makeText(mContext, dCause, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void setPlannedHour(TextView tvPlannedHour, TextView tvDelayedHour, String delayHourLabel) {
+        if (delayHourLabel != null) {
+            tvPlannedHour.setPaintFlags(tvPlannedHour.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+            tvDelayedHour.setText(delayHourLabel);
+            tvDelayedHour.setVisibility(View.VISIBLE);
+        } else {
+            tvPlannedHour.setPaintFlags(tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+            tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
+            tvDelayedHour.setVisibility(View.GONE);
+        }
+    }
+
+    private void setDelayedColor(TextView tvDelayed, int delay) {
+        if (delay < 5) {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
+        } else if (delay >= 5 && delay < 15) {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.orange));
+        } else {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.red));
+        }
+    }
+
+    private void setGoneBtn(Button btn, boolean isGone) {
+        if (isGone) {
+            btn.setVisibility(View.GONE);
+        } else {
+            btn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
