@@ -97,19 +97,23 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
     @OnClick(R.id.btnStationSearch)
     public void submit() {
         if (isBtnEnabled) {
-            AndroidUtils.hideKeyboard(this);
-            String station = etStationSearch.getText().toString();
-            sendRequest(station);
-            setProgressBarVisible(true);
+            if (AndroidUtils.isNetworkAvailable(this)) {
+                AndroidUtils.hideKeyboard(this);
+                setProgressBarVisible(true);
+                String station = etStationSearch.getText().toString();
+                sendRequest(station);
+            } else {
+                showAlertDialog(R.string.alert_msg_no_internet);
+            }
         } else {
-            showAlertDialog();
+            showAlertDialog(R.string.alert_msg_search);
         }
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(int msg) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.alert_title_search)
-                .setMessage(R.string.alert_msg_search)
+                .setMessage(msg)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
