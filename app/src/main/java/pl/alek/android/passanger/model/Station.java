@@ -1,6 +1,8 @@
 package pl.alek.android.passanger.model;
 
 import java.io.Serializable;
+import java.text.Collator;
+import java.util.Locale;
 
 /**
  * Created by Lenovo on 17.08.2016.
@@ -22,6 +24,7 @@ public class Station implements Serializable, Comparable<Station> {
 
     @Override
     public int compareTo(Station station) {
-        return this.Nazwa.compareTo(station.Nazwa);
+        Collator collator = Collator.getInstance(new Locale("pl", "PL"));
+        return collator.compare(this.Nazwa, station.Nazwa);
     }
 }
