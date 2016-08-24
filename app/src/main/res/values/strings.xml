@@ -11,4 +11,6 @@
     <string name="alert_msg_search">You have to enter at least 3 letters</string>
     <string name="alert_msg_no_internet">No internet connection</string>
     <string name="no_result">No result found</string>
+    <string name="canceled">Canceled</string>
+    <string name="partly_canceled">Partly canceled</string>
 </resources>

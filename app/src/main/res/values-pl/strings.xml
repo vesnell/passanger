@@ -11,4 +11,6 @@
     <string name="alert_msg_search">Musisz wprowadzić co najmniej trzy litery</string>
     <string name="alert_msg_no_internet">Brak połączenia z internetem</string>
     <string name="no_result">Brak wyników</string>
+    <string name="canceled">Odwołany</string>
+    <string name="partly_canceled">Odwołany na cz. trasy</string>
 </resources>

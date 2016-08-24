@@ -76,8 +76,9 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
         RailInfo railInfo = mDataset.get(position);
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
-        String delayHourLabel = railInfo.getDelayedHourLabel();
+        String delayHourLabel = railInfo.getDelayedHourLabel(mContext);
         setPlannedHour(holder.tvPlannedHour, holder.tvDelayedHour, delayHourLabel);
+        setVisiblePlannedHour(holder.tvPlannedHour, railInfo);
         setDelayedColor(holder.tvDelayedHour, railInfo.Opoznienie);
         final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
         setGoneBtn(holder.btnCauses, delayCauses.size() == 0);
@@ -97,6 +98,14 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
                 Toast.makeText(mContext, dCause, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void setVisiblePlannedHour(TextView tvPlannedHour, RailInfo railInfo) {
+        if (railInfo.isTrainCanceled() || railInfo.isTrainCanceledPartly()) {
+            tvPlannedHour.setVisibility(View.GONE);
+        } else {
+            tvPlannedHour.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setPlannedHour(TextView tvPlannedHour, TextView tvDelayedHour, String delayHourLabel) {

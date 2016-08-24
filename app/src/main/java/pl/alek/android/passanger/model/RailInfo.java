@@ -1,11 +1,13 @@
 package pl.alek.android.passanger.model;
 
+import android.content.Context;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import pl.alek.android.passanger.R;
 
 /**
  * Created by Lenovo on 23.08.2016.
@@ -55,9 +57,15 @@ public class RailInfo {
         return t;
     }
 
-    public String getDelayedHourLabel() {
+    public String getDelayedHourLabel(Context context) {
         if (Opoznienie > 0) {
-            return getHour(Godzina) + " (+" + Opoznienie + ")";
+            if (isTrainCanceled()) {
+                return context.getResources().getString(R.string.canceled);
+            } else if (isTrainCanceledPartly()) {
+                return context.getResources().getString(R.string.partly_canceled);
+            } else {
+                return getHour(Godzina) + " (+" + Opoznienie + ")";
+            }
         } else {
             return null;
         }
@@ -77,5 +85,13 @@ public class RailInfo {
 
     public String getCarrier() {
         return PrzewoznikSkrot + ":" + NrPociagu;
+    }
+
+    public boolean isTrainCanceled() {
+        return Opoznienie == Integer.MAX_VALUE;
+    }
+
+    public boolean isTrainCanceledPartly() {
+        return Opoznienie == Integer.MAX_VALUE - 1;
     }
 }
