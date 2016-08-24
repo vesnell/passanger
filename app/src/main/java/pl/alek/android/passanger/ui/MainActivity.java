@@ -22,6 +22,7 @@ import pl.alek.android.passanger.R;
 import pl.alek.android.passanger.model.Station;
 import pl.alek.android.passanger.online.service.HttpCallback;
 import pl.alek.android.passanger.online.service.ServiceGenerator;
+import pl.alek.android.passanger.ui.util.AndroidUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
 
     @OnClick(R.id.btnStationSearch)
     public void submit() {
+        AndroidUtils.hideKeyboard(this);
         String station = etStationSearch.getText().toString();
         sendRequest(station);
         setProgressBarVisible(true);
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
     }
 
     private void setProgressBarVisible(boolean isVisible) {
+        btnStationSearch.setEnabled(!isVisible);
         if (isVisible) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
