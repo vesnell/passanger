@@ -30,7 +30,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:hint="@string/hint_station_name"/>
+                android:hint="@string/hint_station_name"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"/>
             <Button
                 style="@style/AppCompat.Button.Flat.Common"
                 android:id="@+id/btnStationSearch"

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,6 +59,25 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        //if on keyboard press ok
+        etStationSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return true;
+                }
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_ENTER:
+                        submit();
+                        break;
+                    case KeyEvent.KEYCODE_BACK:
+                        onBackPressed();
+                        break;
+                }
+                return true;
             }
         });
     }
