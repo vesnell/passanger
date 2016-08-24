@@ -76,7 +76,11 @@ public class RailInfo {
     }
 
     public String getPlatformTrack() {
-        return StacjaPoczatkowaPeron + " / " + StacjaPoczatkowaTor;
+        if (StacjaPoczatkowaTor != null) {
+            return StacjaPoczatkowaPeron + " / " + StacjaPoczatkowaTor;
+        } else {
+            return StacjaPoczatkowaPeron;
+        }
     }
 
     public String getEndStation() {
