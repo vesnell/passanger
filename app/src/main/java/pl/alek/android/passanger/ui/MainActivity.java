@@ -1,6 +1,9 @@
 package pl.alek.android.passanger.ui;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -40,17 +43,19 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
 
+    private boolean isBtnEnabled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        btnStationSearch.setEnabled(false);
+        setBtnBgColor(false);
         etStationSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable editable) {
-                enableSubmitIfReady();
+                enableSubmitIfReady(editable.length());
             }
 
             @Override
@@ -82,17 +87,21 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
         });
     }
 
-    private void enableSubmitIfReady() {
-        boolean isReady = etStationSearch.getText().toString().length() >= START_SEARCH_SIZE_TEXT;
-        btnStationSearch.setEnabled(isReady);
+    private void enableSubmitIfReady(int editableLength) {
+        boolean isReady = editableLength >= START_SEARCH_SIZE_TEXT;
+        setBtnEnabled(isReady);
     }
 
     @OnClick(R.id.btnStationSearch)
     public void submit() {
-        AndroidUtils.hideKeyboard(this);
-        String station = etStationSearch.getText().toString();
-        sendRequest(station);
-        setProgressBarVisible(true);
+        if (isBtnEnabled) {
+            AndroidUtils.hideKeyboard(this);
+            String station = etStationSearch.getText().toString();
+            sendRequest(station);
+            setProgressBarVisible(true);
+        } else {
+            //show Dialog
+        }
     }
 
     private void sendRequest(String stationName) {
@@ -125,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
     }
 
     private void setProgressBarVisible(boolean isVisible) {
+        btnStationSearch.setBackgroundResource(R.drawable.btn_flat_selector);
         btnStationSearch.setEnabled(!isVisible);
         if (isVisible) {
             progressBar.setVisibility(View.VISIBLE);
@@ -145,5 +155,34 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
         bundle.putSerializable(Station.LIST, stations);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private void setBtnEnabled(boolean isEnabled) {
+        if (isEnabled != isBtnEnabled) {
+            isBtnEnabled = isEnabled;
+            setBtnBgColor(isEnabled);
+        }
+    }
+
+    private void setBtnBgColor(boolean isEnabled) {
+        int red = ContextCompat.getColor(this, R.color.red);
+        int darkBlue = ContextCompat.getColor(this, R.color.darkBlue);
+        if (isEnabled) {
+            setBgColor(red, darkBlue, btnStationSearch);
+        } else {
+            setBgColor(darkBlue, red, btnStationSearch);
+        }
+    }
+
+    private void setBgColor(int colorFrom, int colorTo, final View view) {
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(getResources().getInteger(android.R.integer.config_mediumAnimTime));
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                view.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+        });
+        colorAnimation.start();
     }
 }
