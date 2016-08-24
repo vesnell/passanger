@@ -1,6 +1,7 @@
 package pl.alek.android.passanger.ui;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     ProgressBar progressBar;
     @Bind(R.id.rvStationInfoList)
     RecyclerView rvStationInfoList;
+    @Bind(R.id.swipeContainer)
+    SwipeRefreshLayout swipeContainer;
 
     private StationInfoAdapter mAdapter;
 
@@ -51,8 +54,16 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvStationInfoList.setLayoutManager(mLayoutManager);
 
-        Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
+        final Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
         setTitle(station.Nazwa);
+
+        swipeContainer.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        sendRequest(station);
+                    }
+                });
 
         sendRequest(station);
     }
@@ -90,6 +101,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         } else {
             progressBar.setVisibility(View.GONE);
             rvStationInfoList.setVisibility(View.VISIBLE);
+            swipeContainer.setRefreshing(false);
         }
     }
 }
