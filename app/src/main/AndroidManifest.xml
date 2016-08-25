@@ -20,6 +20,10 @@
         </activity>
         <activity android:name="pl.alek.android.passenger.ui.StationsListActivity"/>
         <activity android:name="pl.alek.android.passenger.ui.StationInfoActivity"/>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="fc0de6bc1a505cf91a62e0f0ef664cf3f6b3bbbc" />
     </application>
 
 </manifest>

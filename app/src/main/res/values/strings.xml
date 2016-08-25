@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">passenger</string>
+    <string name="app_name">eConductor</string>
     <string name="input_station_name">Input station name:</string>
     <string name="hint_station_name">Station name</string>
     <string name="btn_search">Search</string>
