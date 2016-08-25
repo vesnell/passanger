@@ -14,4 +14,7 @@
     <string name="canceled">Canceled</string>
     <string name="partly_canceled">Partly canceled</string>
     <string name="about_app">About app</string>
+    <string name="menu_name">Menu</string>
+    <string name="menu_open">Open menu</string>
+    <string name="menu_close">Close menu</string>
 </resources>

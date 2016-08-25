@@ -14,4 +14,7 @@
     <string name="canceled">Odwołany</string>
     <string name="partly_canceled">Odwołany na cz. trasy</string>
     <string name="about_app">O aplikacji</string>
+    <string name="menu_name">Menu</string>
+    <string name="menu_open">Otwarcie menu</string>
+    <string name="menu_close">Zamknięcie menu</string>
 </resources>

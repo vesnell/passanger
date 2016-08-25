@@ -1,10 +1,13 @@
 package pl.alek.android.passenger.ui;
 
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] menuList;
     private CharSequence mTitle;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setMenu() {
+        setToggle();
         menuList = getResources().getStringArray(R.array.main_drawer_menu);
         leftDrawer.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuList));
         leftDrawer.setOnItemClickListener(new DrawerItemClickListener());
+    }
+
+    private void setToggle() {
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                drawerLayout,         /* DrawerLayout object */
+                R.string.menu_open,  /* "open drawer" description */
+                R.string.menu_close  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mTitle);
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(R.string.menu_name);
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        drawerLayout.addDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -77,5 +110,25 @@ public class MainActivity extends AppCompatActivity {
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
