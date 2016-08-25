@@ -18,15 +18,12 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.fabric.sdk.android.Fabric;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.service.HttpCallback;
@@ -54,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements Callback<ArrayLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
