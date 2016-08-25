@@ -1,8 +1,10 @@
 package pl.alek.android.passenger.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,9 @@ import pl.alek.android.passenger.model.RailInfo;
  * Created by Lenovo on 22.08.2016.
  */
 public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.ViewHolder> {
+
+    @Bind(R.id.tvCauses)
+    TextView tvCauses;
 
     private Context mContext;
     private List<RailInfo> mDataset = new ArrayList<RailInfo>();
@@ -90,14 +94,40 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         holder.btnCauses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String dCause = "";
-                for (List<String> cause : delayCauses) {
-                    int nrOfCause = Integer.parseInt(cause.get(1));
-                    dCause += mDelayCauses.get(nrOfCause) + "\n";
-                }
-                Toast.makeText(mContext, dCause, Toast.LENGTH_LONG).show();
+                setAlertDialogCauses(delayCauses);
             }
         });
+    }
+
+    private void setAlertDialogCauses(List<List<String>> delayCauses) {
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View view = inflater.inflate(R.layout.dialog_causes, null);
+        ButterKnife.bind(this, view);
+
+        String causes = getMsg(delayCauses);
+        tvCauses.setText(causes);
+        new AlertDialog.Builder(mContext)
+            .setTitle(R.string.alert_title)
+            .setView(view)
+            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            })
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
+    }
+
+    private String getMsg(List<List<String>> delayCauses) {
+        String causes = "";
+        for (int i = 0; i < delayCauses.size(); i++) {
+            int nrOfCause = Integer.parseInt(delayCauses.get(i).get(1));
+            causes += (i + 1) + ". " + mDelayCauses.get(nrOfCause) + "\n";
+            if (i < delayCauses.size() - 1) {
+                causes += "\n";
+            }
+        }
+        return causes;
     }
 
     private void setVisiblePlannedHour(TextView tvPlannedHour, RailInfo railInfo) {

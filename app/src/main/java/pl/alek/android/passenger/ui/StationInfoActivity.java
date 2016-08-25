@@ -89,7 +89,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
             setEmptyInfo();
         }
         new AlertDialog.Builder(this)
-                .setTitle(R.string.alert_title_search)
+                .setTitle(R.string.alert_title)
                 .setMessage(R.string.alert_msg_no_internet)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

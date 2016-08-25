@@ -7,7 +7,7 @@
     <string name="stations_list">Lista stacji</string>
 
     <string name="btn_inconvenience_cause">Info</string>
-    <string name="alert_title_search">Uwaga!</string>
+    <string name="alert_title">Uwaga!</string>
     <string name="alert_msg_search">Musisz wprowadzić co najmniej trzy litery</string>
     <string name="alert_msg_no_internet">Brak połączenia z internetem</string>
     <string name="no_result">Brak wyników</string>

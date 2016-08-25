@@ -118,7 +118,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
 
     private void showAlertDialog(int msg) {
         new AlertDialog.Builder(getContext())
-                .setTitle(R.string.alert_title_search)
+                .setTitle(R.string.alert_title)
                 .setMessage(msg)
                 .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
