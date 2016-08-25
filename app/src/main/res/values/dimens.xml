@@ -22,4 +22,8 @@
     <dimen name="list_item_info_padding_left">24dp</dimen>
 
     <dimen name="left_drawer_width">240dp</dimen>
+    <dimen name="drawer_item_padding_left">24dp</dimen>
+    <dimen name="drawer_item_margin_vertical">24dp</dimen>
+    <dimen name="drawer_padding_top">48dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
 </resources>

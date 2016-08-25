@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private void setMenu() {
         setToggle();
         menuList = getResources().getStringArray(R.array.main_drawer_menu);
-        leftDrawer.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, menuList));
+        leftDrawer.setAdapter(new DrawerAdapter(this, menuList));
         leftDrawer.setOnItemClickListener(new DrawerItemClickListener());
     }
 

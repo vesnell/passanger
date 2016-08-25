@@ -15,8 +15,5 @@
         android:paddingLeft="@dimen/list_padding_left"
         android:textColor="@color/item_list_text_color"
         android:background="@drawable/item_list_bg"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/lightGrey"/>
+    <include layout="@layout/divider"/>
 </LinearLayout>
