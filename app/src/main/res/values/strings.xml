@@ -17,4 +17,5 @@
     <string name="menu_name">Menu</string>
     <string name="menu_open">Open menu</string>
     <string name="menu_close">Close menu</string>
+    <string name="about_app_text">This app use API of http://portalpasazera.pl</string>
 </resources>
