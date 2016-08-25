@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.model;
+package pl.alek.android.passenger.model;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
 
-import pl.alek.android.passanger.R;
+import pl.alek.android.passenger.R;
 
 /**
  * Created by Lenovo on 23.08.2016.

@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.ui;
+package pl.alek.android.passenger.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.alek.android.passanger.R;
-import pl.alek.android.passanger.model.Station;
+import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.model.Station;
 
 /**
  * Created by Lenovo on 22.08.2016.

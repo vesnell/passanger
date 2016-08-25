@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.ui.util;
+package pl.alek.android.passenger.ui.util;
 
 import android.app.Activity;
 import android.content.Context;

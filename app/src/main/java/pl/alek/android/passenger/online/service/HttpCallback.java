@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.online.service;
+package pl.alek.android.passenger.online.service;
 
 import android.util.Log;
 
@@ -9,10 +9,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import pl.alek.android.passanger.model.Station;
-import pl.alek.android.passanger.online.PassengerInterface;
-import pl.alek.android.passanger.online.StationsAPI;
-import pl.alek.android.passanger.online.utils.HttpUtils;
+import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.PassengerInterface;
+import pl.alek.android.passenger.online.StationsAPI;
+import pl.alek.android.passenger.online.utils.HttpUtils;
 
 /**
  * Created by Lenovo on 21.08.2016.

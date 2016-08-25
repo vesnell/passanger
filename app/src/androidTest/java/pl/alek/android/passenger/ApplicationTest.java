@@ -1,4 +1,4 @@
-package pl.alek.android.passanger;
+package pl.alek.android.passenger;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

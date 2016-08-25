@@ -1,7 +1,6 @@
-package pl.alek.android.passanger.online.service;
+package pl.alek.android.passenger.online.service;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -14,7 +13,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
-import pl.alek.android.passanger.online.PassengerInterface;
+import pl.alek.android.passenger.online.PassengerInterface;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

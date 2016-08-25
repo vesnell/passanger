@@ -1,8 +1,8 @@
-package pl.alek.android.passanger.online;
+package pl.alek.android.passenger.online;
 
 import java.util.ArrayList;
 
-import pl.alek.android.passanger.model.Station;
+import pl.alek.android.passenger.model.Station;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;

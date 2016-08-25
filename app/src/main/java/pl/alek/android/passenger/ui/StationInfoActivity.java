@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.ui;
+package pl.alek.android.passenger.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -17,14 +17,14 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.alek.android.passanger.R;
-import pl.alek.android.passanger.model.RailInfo;
-import pl.alek.android.passanger.model.ServerInfoResponse;
-import pl.alek.android.passanger.model.Station;
-import pl.alek.android.passanger.online.service.ServiceGenerator;
-import pl.alek.android.passanger.online.service.StationInfoAPI;
-import pl.alek.android.passanger.online.utils.HttpUtils;
-import pl.alek.android.passanger.ui.util.AndroidUtils;
+import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.model.RailInfo;
+import pl.alek.android.passenger.model.ServerInfoResponse;
+import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.online.service.StationInfoAPI;
+import pl.alek.android.passenger.online.utils.HttpUtils;
+import pl.alek.android.passenger.ui.util.AndroidUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

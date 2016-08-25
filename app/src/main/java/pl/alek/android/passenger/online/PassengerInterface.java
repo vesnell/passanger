@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.online;
+package pl.alek.android.passenger.online;
 
 /**
  * Created by Lenovo on 21.08.2016.

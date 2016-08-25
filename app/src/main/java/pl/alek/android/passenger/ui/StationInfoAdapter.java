@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.ui;
+package pl.alek.android.passenger.ui;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -18,8 +18,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import pl.alek.android.passanger.R;
-import pl.alek.android.passanger.model.RailInfo;
+import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.model.RailInfo;
 
 /**
  * Created by Lenovo on 22.08.2016.

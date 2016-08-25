@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.online.utils;
+package pl.alek.android.passenger.online.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,8 +10,8 @@ import java.util.Map;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import pl.alek.android.passanger.online.PassengerInterface;
-import pl.alek.android.passanger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.online.PassengerInterface;
+import pl.alek.android.passenger.online.service.ServiceGenerator;
 
 /**
  * Created by Lenovo on 23.08.2016.

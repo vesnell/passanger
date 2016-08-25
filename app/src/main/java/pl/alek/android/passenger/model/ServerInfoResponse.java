@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.model;
+package pl.alek.android.passenger.model;
 
 import java.util.List;
 

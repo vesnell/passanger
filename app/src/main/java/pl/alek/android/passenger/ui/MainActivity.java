@@ -1,4 +1,4 @@
-package pl.alek.android.passanger.ui;
+package pl.alek.android.passenger.ui;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
@@ -24,11 +24,11 @@ import java.util.Collections;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import pl.alek.android.passanger.R;
-import pl.alek.android.passanger.model.Station;
-import pl.alek.android.passanger.online.service.HttpCallback;
-import pl.alek.android.passanger.online.service.ServiceGenerator;
-import pl.alek.android.passanger.ui.util.AndroidUtils;
+import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.service.HttpCallback;
+import pl.alek.android.passenger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.ui.util.AndroidUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

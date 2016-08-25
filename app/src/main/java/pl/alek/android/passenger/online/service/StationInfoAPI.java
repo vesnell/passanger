@@ -1,13 +1,12 @@
-package pl.alek.android.passanger.online.service;
+package pl.alek.android.passenger.online.service;
 
 import java.util.Map;
 
-import pl.alek.android.passanger.model.ServerInfoResponse;
-import pl.alek.android.passanger.online.PassengerInterface;
+import pl.alek.android.passenger.model.ServerInfoResponse;
+import pl.alek.android.passenger.online.PassengerInterface;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
