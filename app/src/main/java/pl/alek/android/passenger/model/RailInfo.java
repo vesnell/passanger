@@ -15,7 +15,7 @@ import pl.alek.android.passenger.R;
 public class RailInfo {
 
     private static final String DATE_FORMAT = "HH:mm";
-    private static final String TIMEZONE = "UTC";
+    private static final String TIMEZONE_UTC = "UTC";
 
     public Integer RozkladID;
     public String ZamowienieSKRJID;
@@ -47,14 +47,32 @@ public class RailInfo {
     public String StacjePosrednie;
     public boolean KomunikacjaZastepcza;
 
-    private String getHour(String godzina) {
-        String time = godzina.split("\\(|\\)")[1];
-        long timeInMillis = Long.parseLong(time);
+    private String getHourInString(String godzina) {
+        long timestamp = getTimestamp(godzina);
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
-        Timestamp timestamp = new Timestamp(timeInMillis);
+        dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE_UTC));
         String t = dateFormat.format(timestamp);
         return t;
+    }
+
+    private long getTimestamp(String portalDate) {
+        String time = portalDate.split("\\(|\\)")[1];
+        return Long.parseLong(time);
+    }
+
+    public boolean isLeftStation() {
+        long curr = System.currentTimeMillis();
+
+        String timeToCompare = null;
+        if ((!isTrainCanceled()) && (!isTrainCanceledPartly()) && Opoznienie > 0) {
+            timeToCompare = Godzina;
+        } else {
+             timeToCompare = GodzinaPlanowa;
+        }
+        long tToCompare = getTimestamp(timeToCompare);
+        long fixCurr = curr + (2 * 3600 * 1000L);
+
+        return fixCurr > tToCompare;
     }
 
     public String getDelayedHourLabel(Context context) {
@@ -64,7 +82,7 @@ public class RailInfo {
             } else if (isTrainCanceledPartly()) {
                 return context.getResources().getString(R.string.partly_canceled);
             } else {
-                return getHour(Godzina) + " (+" + Opoznienie + ")";
+                return getHourInString(Godzina) + " (+" + Opoznienie + ")";
             }
         } else {
             return null;
@@ -72,7 +90,7 @@ public class RailInfo {
     }
 
     public String getPlannedHourLabel() {
-        return getHour(GodzinaPlanowa);
+        return getHourInString(GodzinaPlanowa);
     }
 
     public String getPlatformTrack() {

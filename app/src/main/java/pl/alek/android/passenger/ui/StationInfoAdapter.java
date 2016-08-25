@@ -33,6 +33,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     private Context mContext;
     private List<RailInfo> mDataset = new ArrayList<RailInfo>();
     private List<String> mDelayCauses = new ArrayList<String>();
+    private int lastPositionHasLeft = -1;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.llRailInfo)
@@ -79,6 +80,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         holder.llRailInfo.setLayoutParams(params);
 
         RailInfo railInfo = mDataset.get(position);
+        setLeftItems(holder.llRailInfo, railInfo.isLeftStation(), position);
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
         String delayHourLabel = railInfo.getDelayedHourLabel(mContext);
         setPlannedHour(holder.tvPlannedHour, holder.tvDelayedHour, delayHourLabel);
@@ -97,6 +99,17 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
                 setAlertDialogCauses(delayCauses);
             }
         });
+    }
+
+    private void setLeftItems(LinearLayout ll, boolean isLeftStation, int position) {
+        if (isLeftStation) {
+            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.lightGrey));
+            if (position > lastPositionHasLeft) {
+                lastPositionHasLeft = position;
+            }
+        } else {
+            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+        }
     }
 
     private void setAlertDialogCauses(List<List<String>> delayCauses) {
@@ -173,4 +186,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     public int getItemCount() {
         return mDataset.size();
     }
+
+    public int getLastLeftPosition() {
+        return lastPositionHasLeft;
+    }
+
+
 }
