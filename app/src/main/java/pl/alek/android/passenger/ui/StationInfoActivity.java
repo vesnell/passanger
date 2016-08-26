@@ -94,10 +94,10 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     }
 
     private void sendRequest(Station station) {
-            StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
-            Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
-            Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
-            call.enqueue(this);
+        StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
+        Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
+        Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
+        call.enqueue(this);
     }
 
     private void showAlertDialogNoInternetConn() {

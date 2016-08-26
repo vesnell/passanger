@@ -150,6 +150,8 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
             } else {
                 Toast.makeText(getContext(), R.string.station_not_found, Toast.LENGTH_LONG).show();
             }
+        } else {
+            showAlertDialog(R.string.alert_msg_500);
         }
     }
 
