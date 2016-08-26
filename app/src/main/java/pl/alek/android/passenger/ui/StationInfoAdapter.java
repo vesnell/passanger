@@ -27,13 +27,9 @@ import pl.alek.android.passenger.model.RailInfo;
  */
 public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.ViewHolder> {
 
-    @Bind(R.id.tvCauses)
-    TextView tvCauses;
-
     private Context mContext;
     private List<RailInfo> mDataset = new ArrayList<RailInfo>();
     private List<String> mDelayCauses = new ArrayList<String>();
-    private int lastPositionHasLeft = -1;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.llRailInfo)
@@ -80,7 +76,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         holder.llRailInfo.setLayoutParams(params);
 
         RailInfo railInfo = mDataset.get(position);
-        setLeftItems(holder.llRailInfo, railInfo.isLeftStation(), position);
+        setLeftItems(holder.llRailInfo, railInfo.isLeftStation());
         holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
         String delayHourLabel = railInfo.getDelayedHourLabel(mContext);
         setPlannedHour(holder.tvPlannedHour, holder.tvDelayedHour, delayHourLabel);
@@ -101,27 +97,19 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         });
     }
 
-    private void setLeftItems(LinearLayout ll, boolean isLeftStation, int position) {
+    private void setLeftItems(LinearLayout ll, boolean isLeftStation) {
         if (isLeftStation) {
-            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.lightGrey));
-            if (position > lastPositionHasLeft) {
-                lastPositionHasLeft = position;
-            }
+            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.lighterGrey));
         } else {
             ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
         }
     }
 
     private void setAlertDialogCauses(List<List<String>> delayCauses) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.dialog_causes, null);
-        ButterKnife.bind(this, view);
-
         String causes = getMsg(delayCauses);
-        tvCauses.setText(causes);
         new AlertDialog.Builder(mContext)
             .setTitle(R.string.alert_title)
-            .setView(view)
+            .setMessage(causes)
             .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -186,10 +174,4 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     public int getItemCount() {
         return mDataset.size();
     }
-
-    public int getLastLeftPosition() {
-        return lastPositionHasLeft;
-    }
-
-
 }
