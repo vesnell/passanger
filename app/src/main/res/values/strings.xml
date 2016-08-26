@@ -19,4 +19,5 @@
     <string name="menu_close">Close menu</string>
     <string name="about_app_text">This app use API of http://portalpasazera.pl</string>
     <string name="btn_refresh">Refresh</string>
+    <string name="alert_msg_500">There is a server connection problem. Try again later</string>
 </resources>

@@ -23,6 +23,7 @@ import pl.alek.android.passenger.model.RailInfo;
 import pl.alek.android.passenger.model.ServerInfoResponse;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.exception.ConnectionFailureException;
+import pl.alek.android.passenger.online.service.HttpCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.online.service.StationInfoAPI;
 import pl.alek.android.passenger.online.utils.HttpUtils;
@@ -37,6 +38,7 @@ import retrofit2.Response;
 public class StationInfoActivity extends AppCompatActivity implements Callback<ServerInfoResponse> {
 
     private static final String TAG = "StationInfoActivity";
+    private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
@@ -49,6 +51,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
     private Station station;
     private StationInfoAdapter mAdapter;
+    private int requestsIterator = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,30 +70,34 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        sendRequest(station, true);
+                        prepareStationInfoView(station, true);
                     }
                 });
 
-        sendRequest(station, false);
+        prepareStationInfoView(station, false);
     }
 
     @OnClick(R.id.btnRefresh)
     public void refresh() {
-        sendRequest(station, false);
+        prepareStationInfoView(station, false);
     }
 
-    private void sendRequest(Station station, boolean isRefreshBySwipe) {
+    private void prepareStationInfoView(Station station, boolean isRefreshBySwipe) {
         if (!isRefreshBySwipe) {
             setProgressBarVisible(true);
         }
         if (AndroidUtils.isNetworkAvailable(this)) {
+            sendRequest(station);
+        } else {
+            showAlertDialogNoInternetConn();
+        }
+    }
+
+    private void sendRequest(Station station) {
             StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
             Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
             Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
             call.enqueue(this);
-        } else {
-            showAlertDialogNoInternetConn();
-        }
     }
 
     private void showAlertDialogNoInternetConn() {
@@ -100,16 +107,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         if (swipeContainer.isRefreshing()) {
             swipeContainer.setRefreshing(false);
         }
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.alert_title)
-                .setMessage(R.string.alert_msg_no_internet)
-                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+        showAlertDialog(R.string.alert_msg_no_internet);
     }
 
     @Override
@@ -133,8 +131,32 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
                 }
             }
         } else {
-
+            refreshRequestParams();
         }
+    }
+
+    private void refreshRequestParams() {
+        if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
+            requestsIterator++;
+            HttpCallback httpCallback = new HttpCallback(this);
+            ServiceGenerator.sendRequest(this, httpCallback);
+        } else {
+            setEmptyInfo();
+            showAlertDialog(R.string.alert_msg_500);
+        }
+    }
+
+    private void showAlertDialog(int msgId) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.alert_title)
+                .setMessage(msgId)
+                .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @Override
