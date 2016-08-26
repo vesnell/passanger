@@ -61,7 +61,12 @@ public class HttpCallback implements Callback {
             retrofit2.Call<ArrayList<Station>> call = stations.loadStations(search, filter, stationName);
             call.enqueue(callback);
         } else {
-            this.stationInfoActivity.refresh();
+            this.stationInfoActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    stationInfoActivity.refresh();
+                }
+            });
         }
     }
 
