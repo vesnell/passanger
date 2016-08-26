@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.service.HttpCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
@@ -155,7 +156,11 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     @Override
     public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
         setProgressBarVisible(false);
-        Log.e(TAG, t.getMessage());
+        try {
+            throw new ConnectionFailureException(t);
+        } catch (ConnectionFailureException e) {
+            Log.e(TAG, t.getMessage());
+        }
     }
 
     private void setProgressBarVisible(boolean isVisible) {

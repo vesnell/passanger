@@ -12,6 +12,7 @@ import okhttp3.Response;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.PassengerInterface;
 import pl.alek.android.passenger.online.StationsAPI;
+import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.utils.HttpUtils;
 
 /**
@@ -37,8 +38,12 @@ public class HttpCallback implements Callback {
     }
 
     @Override
-    public void onFailure(Call call, IOException e) {
-        Log.e(TAG, e.getMessage());
+    public void onFailure(Call call, IOException err) {
+        try {
+            throw new ConnectionFailureException(err.getMessage());
+        } catch (ConnectionFailureException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     @Override

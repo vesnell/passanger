@@ -22,6 +22,7 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.RailInfo;
 import pl.alek.android.passenger.model.ServerInfoResponse;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.online.service.StationInfoAPI;
 import pl.alek.android.passenger.online.utils.HttpUtils;
@@ -114,24 +115,36 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     @Override
     public void onResponse(Call<ServerInfoResponse> call, Response<ServerInfoResponse> response) {
         setProgressBarVisible(false);
-        if (response.body() != null) {
-            ServerInfoResponse serverInfoResponse = response.body();
-            List<RailInfo> scheduleList = serverInfoResponse.Rozklad;
-            if (scheduleList.size() > 0) {
-                mAdapter = new StationInfoAdapter(this, scheduleList, serverInfoResponse.Utrudnienia);
-                rvStationInfoList.setAdapter(mAdapter);
+        if (response.code() == 200) {
+            if (response.body() != null) {
+                ServerInfoResponse serverInfoResponse = response.body();
+                List<RailInfo> scheduleList = serverInfoResponse.Rozklad;
+                if (scheduleList.size() > 0) {
+                    mAdapter = new StationInfoAdapter(this, scheduleList, serverInfoResponse.Utrudnienia);
+                    rvStationInfoList.setAdapter(mAdapter);
+                } else {
+                    setEmptyInfo();
+                }
             } else {
-                setEmptyInfo();
+                try {
+                    throw new ConnectionFailureException("response.body() is null");
+                } catch (ConnectionFailureException e) {
+                    Log.e(TAG, response.message());
+                }
             }
         } else {
-            Log.e(TAG, response.message());
+
         }
     }
 
     @Override
     public void onFailure(Call<ServerInfoResponse> call, Throwable t) {
         setProgressBarVisible(false);
-        Log.e(TAG, t.getMessage());
+        try {
+            throw new ConnectionFailureException(t);
+        } catch (ConnectionFailureException e) {
+            Log.e(TAG, t.getMessage());
+        }
     }
 
     private void setProgressBarVisible(boolean isVisible) {
