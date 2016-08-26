@@ -11,16 +11,6 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_centerInParent="true"/>
-    <TextView
-        android:id="@+id/tvNoResult"
-        style="@style/AppCompat.TextView.Label.Bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_centerInParent="true"
-        android:text="@string/no_result"
-        android:visibility="gone"/>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
@@ -32,4 +22,27 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <LinearLayout
+        android:id="@+id/llNoResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            style="@style/AppCompat.TextView.Label.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/controls_vertical_margin_normal"
+            android:text="@string/no_result" />
+        <Button
+            android:id="@+id/btnRefresh"
+            style="@style/AppCompat.Button.Flat.Common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/btn_refresh"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -9,14 +9,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.RailInfo;
 import pl.alek.android.passenger.model.ServerInfoResponse;
@@ -42,9 +43,10 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     RecyclerView rvStationInfoList;
     @Bind(R.id.swipeContainer)
     SwipeRefreshLayout swipeContainer;
-    @Bind(R.id.tvNoResult)
-    TextView tvNoResult;
+    @Bind(R.id.llNoResult)
+    LinearLayout llNoResult;
 
+    private Station station;
     private StationInfoAdapter mAdapter;
 
     @Override
@@ -53,27 +55,33 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         setContentView(R.layout.activity_station_info);
         ButterKnife.bind(this);
 
-        setProgressBarVisible(true);
-
         rvStationInfoList.setHasFixedSize(true);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvStationInfoList.setLayoutManager(mLayoutManager);
 
-        final Station station = (Station) getIntent().getSerializableExtra(Station.NAME);
+        station = (Station) getIntent().getSerializableExtra(Station.NAME);
         setTitle(station.Nazwa);
 
         swipeContainer.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        sendRequest(station);
+                        sendRequest(station, true);
                     }
                 });
 
-        sendRequest(station);
+        sendRequest(station, false);
     }
 
-    private void sendRequest(Station station) {
+    @OnClick(R.id.btnRefresh)
+    public void refresh() {
+        sendRequest(station, false);
+    }
+
+    private void sendRequest(Station station, boolean isRefreshBySwipe) {
+        if (!isRefreshBySwipe) {
+            setProgressBarVisible(true);
+        }
         if (AndroidUtils.isNetworkAvailable(this)) {
             StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
             Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
@@ -87,6 +95,9 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     private void showAlertDialogNoInternetConn() {
         if (progressBar.getVisibility() == View.VISIBLE) {
             setEmptyInfo();
+        }
+        if (swipeContainer.isRefreshing()) {
+            swipeContainer.setRefreshing(false);
         }
         new AlertDialog.Builder(this)
                 .setTitle(R.string.alert_title)
@@ -124,7 +135,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     }
 
     private void setProgressBarVisible(boolean isVisible) {
-        tvNoResult.setVisibility(View.GONE);
+        llNoResult.setVisibility(View.GONE);
         if (isVisible) {
             progressBar.setVisibility(View.VISIBLE);
             rvStationInfoList.setVisibility(View.GONE);
@@ -138,6 +149,6 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     private void setEmptyInfo() {
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
-        tvNoResult.setVisibility(View.VISIBLE);
+        llNoResult.setVisibility(View.VISIBLE);
     }
 }
