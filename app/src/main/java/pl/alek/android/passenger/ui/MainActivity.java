@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = getFragment(position);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
+                .replace(R.id.content_frame, fragment, String.valueOf(position))
                 .commit();
 
         leftDrawer.setItemChecked(position, true);
@@ -98,12 +98,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Fragment getFragment(int position) {
-        switch (position) {
-            case ABOUT_APP_FRAGMENT_NO:
-                return new AboutAppFragment();
-            default:
-                return new MainFragment();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(position));
+        if (fragment == null) {
+            switch (position) {
+                case ABOUT_APP_FRAGMENT_NO:
+                    fragment = new AboutAppFragment();
+                    break;
+                default:
+                    fragment = new MainFragment();
+                    break;
+            }
         }
+        return fragment;
     }
 
     @Override

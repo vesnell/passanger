@@ -43,6 +43,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
+    private static final String IS_WAITING_FOR_RESP_KEY = "isWaitingForResp";
 
     @Bind(R.id.etStationSearch)
     EditText etStationSearch;
@@ -52,11 +53,14 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     ProgressBar progressBar;
 
     private boolean isBtnEnabled = false;
+    private boolean isWaitingForResponse = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
+
+        setRetainInstance(true);
 
         setBtnBgColor(false);
         etStationSearch.addTextChangedListener(new TextWatcher() {
@@ -93,6 +97,12 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
             }
         });
 
+        if (savedInstanceState != null) {
+            isWaitingForResponse = savedInstanceState.getBoolean(IS_WAITING_FOR_RESP_KEY);
+            setProgressBarVisible(isWaitingForResponse);
+            enableSubmitIfReady(etStationSearch.getText().length());
+        }
+
         return v;
     }
 
@@ -107,8 +117,8 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
             if (AndroidUtils.isNetworkAvailable(getContext())) {
                 AndroidUtils.hideKeyboard(getActivity());
                 setProgressBarVisible(true);
-                String station = etStationSearch.getText().toString();
-                sendRequest(station);
+                String stationName = etStationSearch.getText().toString();
+                sendRequest(stationName);
             } else {
                 showAlertDialog(R.string.alert_msg_no_internet);
             }
@@ -134,11 +144,14 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
         HttpCallback httpCallback = new HttpCallback(this);
         httpCallback.setStationName(stationName);
         ServiceGenerator.sendRequest(getContext(), httpCallback);
+        isWaitingForResponse = true;
     }
 
     @Override
     public void onResponse(Call<ArrayList<Station>> call, Response<ArrayList<Station>> response) {
+        isWaitingForResponse = false;
         setProgressBarVisible(false);
+        setBtnEnabled(true);
         if (response.code() == 200) {
             ArrayList<Station> stations = response.body();
             if (stations.size() == 1) {
@@ -157,6 +170,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
 
     @Override
     public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
+        isWaitingForResponse = false;
         setProgressBarVisible(false);
         try {
             throw new ConnectionFailureException(t);
@@ -216,5 +230,11 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
             }
         });
         colorAnimation.start();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(IS_WAITING_FOR_RESP_KEY, isWaitingForResponse);
+        super.onSaveInstanceState(outState);
     }
 }
