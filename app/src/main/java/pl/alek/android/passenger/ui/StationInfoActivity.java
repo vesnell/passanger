@@ -25,8 +25,8 @@ import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.service.HttpCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
-import pl.alek.android.passenger.online.service.StationInfoAPI;
-import pl.alek.android.passenger.online.utils.HttpUtils;
+import pl.alek.android.passenger.online.service.api.StationInfoAPI;
+import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,7 +95,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
 
     private void sendRequest(Station station) {
         StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
-        Map<String, Object> params = HttpUtils.getStationInfoParams(station.ID);
+        Map<String, Object> params = PassengerReqVerToken.getStationInfoParams(station.ID);
         Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
         call.enqueue(this);
     }
@@ -139,7 +139,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
             HttpCallback httpCallback = new HttpCallback(this);
-            ServiceGenerator.sendRequest(this, httpCallback);
+            ServiceGenerator.sendRequest(httpCallback);
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);

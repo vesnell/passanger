@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.online.service;
+package pl.alek.android.passenger.online.service.api;
 
 import java.util.Map;
 
@@ -14,9 +14,9 @@ import retrofit2.http.POST;
  * Created by Lenovo on 22.08.2016.
  */
 public interface StationInfoAPI {
-    @Headers({"X-Requested-With:XMLHttpRequest",
-            "Accept:application/json, text/javascript, */*; q=0.01",
-            "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/51.0.2704.79 Chrome/51.0.2704.79 Safari/537.36"})
+    @Headers({PassengerInterface.HEADER_REQUESTED_XML,
+            PassengerInterface.HEADER_ACCEPT_JSON,
+            PassengerInterface.HEADER_USER_AGENT_MOZILLA})
     @POST("/" + PassengerInterface.TRACK + "/" + PassengerInterface.DOWNLOAD)
     @FormUrlEncoded
     Call<ServerInfoResponse> loadData(

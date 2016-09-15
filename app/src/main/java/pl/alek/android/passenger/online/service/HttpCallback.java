@@ -9,12 +9,10 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import pl.alek.android.passenger.model.ServerInfoResponse;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.PassengerInterface;
-import pl.alek.android.passenger.online.StationsAPI;
+import pl.alek.android.passenger.online.service.api.StationsAPI;
 import pl.alek.android.passenger.online.exception.ConnectionFailureException;
-import pl.alek.android.passenger.online.utils.HttpUtils;
+import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.StationInfoActivity;
 
 /**
@@ -27,8 +25,6 @@ public class HttpCallback implements Callback {
     private retrofit2.Callback<ArrayList<Station>> callback;
     private StationInfoActivity stationInfoActivity;
     private String stationName = "";
-    private String search;
-    private String filter;
 
     public HttpCallback(retrofit2.Callback<ArrayList<Station>> callback) {
         this.callback = callback;
@@ -39,8 +35,6 @@ public class HttpCallback implements Callback {
     }
 
     public void setStationName(String stationName) {
-        this.search = PassengerInterface.CONN_SEARCH;
-        this.filter = PassengerInterface.FILTER;
         this.stationName = stationName;
     }
 
@@ -55,10 +49,10 @@ public class HttpCallback implements Callback {
 
     @Override
     public void onResponse(Call c, Response response) throws IOException {
-        ServiceGenerator.reqVerToken = HttpUtils.getReqVerToken(response);
+        PassengerReqVerToken.setReqVerToken(response);
         if (!isRefreshRequest()) {
             StationsAPI stations = ServiceGenerator.createService(StationsAPI.class);
-            retrofit2.Call<ArrayList<Station>> call = stations.loadStations(search, filter, stationName);
+            retrofit2.Call<ArrayList<Station>> call = stations.loadStations(stationName);
             call.enqueue(callback);
         } else {
             this.stationInfoActivity.runOnUiThread(new Runnable() {

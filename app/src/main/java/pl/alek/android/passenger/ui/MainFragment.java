@@ -143,7 +143,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     private void sendRequest(String stationName) {
         HttpCallback httpCallback = new HttpCallback(this);
         httpCallback.setStationName(stationName);
-        ServiceGenerator.sendRequest(getContext(), httpCallback);
+        ServiceGenerator.sendRequest(httpCallback);
         isWaitingForResponse = true;
     }
 

@@ -16,6 +16,7 @@ public class RailInfo {
 
     private static final String DATE_FORMAT = "HH:mm";
     private static final String TIMEZONE_UTC = "UTC";
+    private static final String ARROW_UNICODE = "\u21B3";
 
     public Integer RozkladID;
     public String ZamowienieSKRJID;
@@ -102,7 +103,7 @@ public class RailInfo {
     }
 
     public String getEndStation() {
-        return "\u21B3 " + RelacjaKoncowaNazwa;
+        return ARROW_UNICODE + " " + RelacjaKoncowaNazwa;
     }
 
     public String getCarrier() {

@@ -1,7 +1,5 @@
 package pl.alek.android.passenger.online.service;
 
-import android.content.Context;
-
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -13,6 +11,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import pl.alek.android.passenger.App;
 import pl.alek.android.passenger.online.PassengerInterface;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,9 +28,8 @@ public class ServiceGenerator {
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create();
 
-    public static ClearableCookieJar cookie;
-    public static OkHttpClient client;
-    public static String reqVerToken;
+    private static ClearableCookieJar cookie = instantCookie();
+    private static OkHttpClient client = setClient();
 
     public static <S> S createService(Class<S> serviceClass) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -43,29 +41,23 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
-    public static void sendRequest(Context ctx, Callback callback) {
-        if (client == null) {
-            setClient(ctx);
-        }
+    public static void sendRequest(Callback callback) {
         Request request = new Request.Builder()
                 .url(TRACK_URL)
                 .build();
         client.newCall(request).enqueue(callback);
     }
 
-    private static OkHttpClient setClient(Context ctx) {
-        instantCookie(ctx);
+    private static OkHttpClient setClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder
                 .cookieJar(cookie)
                 .addInterceptor(addLog());
-        client = builder.build();
-        return client;
+        return builder.build();
     }
 
-    private static ClearableCookieJar instantCookie(Context ctx) {
-        cookie = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(ctx));
-        return cookie;
+    private static ClearableCookieJar instantCookie() {
+        return new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(App.getAppContext()));
     }
 
     private static HttpLoggingInterceptor addLog(){

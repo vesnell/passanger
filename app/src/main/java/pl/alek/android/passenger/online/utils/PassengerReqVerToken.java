@@ -16,17 +16,19 @@ import pl.alek.android.passenger.online.service.ServiceGenerator;
 /**
  * Created by Lenovo on 23.08.2016.
  */
-public class HttpUtils {
-    public static String getReqVerToken(Response response) throws IOException {
+public class PassengerReqVerToken {
+
+    public static String reqVerToken;
+
+    public static void setReqVerToken(Response response) throws IOException {
         ResponseBody responseBody = response.body();
         String bodyHtml = responseBody.string();
         responseBody.close();
         Document doc = Jsoup.parse(bodyHtml);
         if (doc != null) {
             Element input = doc.select("input[name=" + PassengerInterface.REQ_VER_TOK + "]").first();
-            return input.attr("value");
+            reqVerToken = input.attr("value");
         }
-        return null;
     }
 
     public static Map<String, Object> getStationInfoParams(Integer stationID) {
@@ -34,7 +36,7 @@ public class HttpUtils {
         params.put(PassengerInterface.STATION_ID, stationID);
         params.put(PassengerInterface.DEPARTURES, true);
         params.put(PassengerInterface.AVAILABLE_KH, PassengerInterface.AVAILABLE_KH_VALUE);
-        params.put(PassengerInterface.REQ_VER_TOK, ServiceGenerator.reqVerToken);
+        params.put(PassengerInterface.REQ_VER_TOK, reqVerToken);
         return params;
     }
 }
