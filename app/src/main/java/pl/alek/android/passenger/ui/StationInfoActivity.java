@@ -19,11 +19,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
-import pl.alek.android.passenger.model.RailInfo;
-import pl.alek.android.passenger.model.ServerInfoResponse;
+import pl.alek.android.passenger.model.TrainInfo;
+import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.exception.ConnectionFailureException;
-import pl.alek.android.passenger.online.service.HttpCallback;
+import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.online.service.api.StationInfoAPI;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
@@ -35,7 +35,7 @@ import retrofit2.Response;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity implements Callback<ServerInfoResponse> {
+public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo> {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -96,7 +96,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     private void sendRequest(Station station) {
         StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
         Map<String, Object> params = PassengerReqVerToken.getStationInfoParams(station.ID);
-        Call<ServerInfoResponse> call = stationInfoAPI.loadData(params);
+        Call<GeneralStationInfo> call = stationInfoAPI.loadData(params);
         call.enqueue(this);
     }
 
@@ -111,14 +111,14 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     }
 
     @Override
-    public void onResponse(Call<ServerInfoResponse> call, Response<ServerInfoResponse> response) {
+    public void onResponse(Call<GeneralStationInfo> call, Response<GeneralStationInfo> response) {
         setProgressBarVisible(false);
         if (response.code() == 200) {
             if (response.body() != null) {
-                ServerInfoResponse serverInfoResponse = response.body();
-                List<RailInfo> scheduleList = serverInfoResponse.Rozklad;
+                GeneralStationInfo generalStationInfo = response.body();
+                List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
                 if (scheduleList.size() > 0) {
-                    mAdapter = new StationInfoAdapter(this, scheduleList, serverInfoResponse.Utrudnienia);
+                    mAdapter = new StationInfoAdapter(this, scheduleList, generalStationInfo.Utrudnienia);
                     rvStationInfoList.setAdapter(mAdapter);
                 } else {
                     setEmptyInfo();
@@ -138,8 +138,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     private void refreshRequestParams() {
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
-            HttpCallback httpCallback = new HttpCallback(this);
-            ServiceGenerator.sendRequest(httpCallback);
+            ServiceCallback serviceCallback = new ServiceCallback(this);
+            ServiceGenerator.sendRequest(serviceCallback);
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);
@@ -160,7 +160,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<S
     }
 
     @Override
-    public void onFailure(Call<ServerInfoResponse> call, Throwable t) {
+    public void onFailure(Call<GeneralStationInfo> call, Throwable t) {
         setProgressBarVisible(false);
         try {
             throw new ConnectionFailureException(t);

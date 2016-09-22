@@ -12,7 +12,7 @@ import pl.alek.android.passenger.R;
 /**
  * Created by Lenovo on 23.08.2016.
  */
-public class RailInfo {
+public class TrainInfo {
 
     private static final String DATE_FORMAT = "HH:mm";
     private static final String TIMEZONE_UTC = "UTC";

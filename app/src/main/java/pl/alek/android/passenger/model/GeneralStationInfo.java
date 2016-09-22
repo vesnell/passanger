@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class ServerInfoResponse {
+public class GeneralStationInfo {
     public String CzasStatystyk;
     public String CzasImportu;
     public String CzasObliczen;
@@ -24,6 +24,6 @@ public class ServerInfoResponse {
     public String NajblizszyWRozkladzie;
     public List<String> Utrudnienia;
     public boolean Odjazdy;
-    public List<RailInfo> Rozklad;
-    public List<RailInfo> Opoznione;
+    public List<TrainInfo> Rozklad;
+    public List<TrainInfo> Opoznione;
 }

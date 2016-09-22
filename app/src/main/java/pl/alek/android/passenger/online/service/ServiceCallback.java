@@ -18,24 +18,21 @@ import pl.alek.android.passenger.ui.StationInfoActivity;
 /**
  * Created by Lenovo on 21.08.2016.
  */
-public class HttpCallback implements Callback {
+public class ServiceCallback implements Callback {
 
-    private static final String TAG = "HttpCallback";
+    private static final String TAG = "ServiceCallback";
 
     private retrofit2.Callback<ArrayList<Station>> callback;
     private StationInfoActivity stationInfoActivity;
-    private String stationName = "";
+    private String stationName;
 
-    public HttpCallback(retrofit2.Callback<ArrayList<Station>> callback) {
+    public ServiceCallback(retrofit2.Callback<ArrayList<Station>> callback, String stationName) {
         this.callback = callback;
-    }
-
-    public HttpCallback(StationInfoActivity stationInfoActivity) {
-        this.stationInfoActivity = stationInfoActivity;
-    }
-
-    public void setStationName(String stationName) {
         this.stationName = stationName;
+    }
+
+    public ServiceCallback(StationInfoActivity stationInfoActivity) {
+        this.stationInfoActivity = stationInfoActivity;
     }
 
     @Override

@@ -18,6 +18,6 @@ public interface StationsAPI {
             PassengerInterface.HEADER_USER_AGENT_MOZILLA})
     @GET("/" + PassengerInterface.CONN_SEARCH + "/" + PassengerInterface.FILTER)
     Call<ArrayList<Station>> loadStations(
-            @Query(value= PassengerInterface.INPUT_TEXT, encoded=true) String stationName
+            @Query(value = PassengerInterface.INPUT_TEXT, encoded = true) String stationName
     );
 }

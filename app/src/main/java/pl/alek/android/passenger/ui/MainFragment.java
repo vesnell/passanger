@@ -29,7 +29,7 @@ import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.exception.ConnectionFailureException;
-import pl.alek.android.passenger.online.service.HttpCallback;
+import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 import retrofit2.Call;
@@ -141,9 +141,8 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     }
 
     private void sendRequest(String stationName) {
-        HttpCallback httpCallback = new HttpCallback(this);
-        httpCallback.setStationName(stationName);
-        ServiceGenerator.sendRequest(httpCallback);
+        ServiceCallback serviceCallback = new ServiceCallback(this, stationName);
+        ServiceGenerator.sendRequest(serviceCallback);
         isWaitingForResponse = true;
     }
 
@@ -157,7 +156,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
             if (stations.size() == 1) {
                 Station station = stations.get(0);
                 openStationInfoActivity(station);
-            } else if (stations.size() > 0) {
+            } else if (stations.size() > 1) {
                 Collections.sort(stations);
                 openStationsListActivity(stations);
             } else {

@@ -20,7 +20,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
-import pl.alek.android.passenger.model.RailInfo;
+import pl.alek.android.passenger.model.TrainInfo;
 
 /**
  * Created by Lenovo on 22.08.2016.
@@ -28,7 +28,7 @@ import pl.alek.android.passenger.model.RailInfo;
 public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<RailInfo> mDataset = new ArrayList<RailInfo>();
+    private List<TrainInfo> mDataset = new ArrayList<TrainInfo>();
     private List<String> mDelayCauses = new ArrayList<String>();
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,7 +55,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         }
     }
 
-    public StationInfoAdapter(Context context, List<RailInfo> myDataset, List<String> delayCauses) {
+    public StationInfoAdapter(Context context, List<TrainInfo> myDataset, List<String> delayCauses) {
         mDataset = myDataset;
         mContext = context;
         mDelayCauses = delayCauses;
@@ -75,19 +75,19 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, height);
         holder.llRailInfo.setLayoutParams(params);
 
-        RailInfo railInfo = mDataset.get(position);
-        setLeftItems(holder.llRailInfo, railInfo.isLeftStation());
-        holder.tvPlannedHour.setText(railInfo.getPlannedHourLabel());
-        String delayHourLabel = railInfo.getDelayedHourLabel(mContext);
+        TrainInfo trainInfo = mDataset.get(position);
+        setLeftItems(holder.llRailInfo, trainInfo.isLeftStation());
+        holder.tvPlannedHour.setText(trainInfo.getPlannedHourLabel());
+        String delayHourLabel = trainInfo.getDelayedHourLabel(mContext);
         setPlannedHour(holder.tvPlannedHour, holder.tvDelayedHour, delayHourLabel);
-        setVisiblePlannedHour(holder.tvPlannedHour, railInfo);
-        setDelayedColor(holder.tvDelayedHour, railInfo.Opoznienie);
-        final List<List<String>> delayCauses = railInfo.PrzyczynyUtrudnienia;
+        setVisiblePlannedHour(holder.tvPlannedHour, trainInfo);
+        setDelayedColor(holder.tvDelayedHour, trainInfo.Opoznienie);
+        final List<List<String>> delayCauses = trainInfo.PrzyczynyUtrudnienia;
         setGoneBtn(holder.btnCauses, delayCauses.size() == 0);
-        holder.tvPlatformTrack.setText(railInfo.getPlatformTrack());
-        holder.tvTrainNo.setText(railInfo.getCarrier());
-        holder.tvStartStation.setText(railInfo.RelacjaPoczatkowaNazwa);
-        holder.tvEndStation.setText(railInfo.getEndStation());
+        holder.tvPlatformTrack.setText(trainInfo.getPlatformTrack());
+        holder.tvTrainNo.setText(trainInfo.getCarrier());
+        holder.tvStartStation.setText(trainInfo.RelacjaPoczatkowaNazwa);
+        holder.tvEndStation.setText(trainInfo.getEndStation());
 
         holder.btnCauses.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,8 +131,8 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         return causes;
     }
 
-    private void setVisiblePlannedHour(TextView tvPlannedHour, RailInfo railInfo) {
-        if (railInfo.isTrainCanceled() || railInfo.isTrainCanceledPartly()) {
+    private void setVisiblePlannedHour(TextView tvPlannedHour, TrainInfo trainInfo) {
+        if (trainInfo.isTrainCanceled() || trainInfo.isTrainCanceledPartly()) {
             tvPlannedHour.setVisibility(View.GONE);
         } else {
             tvPlannedHour.setVisibility(View.VISIBLE);

@@ -2,7 +2,7 @@ package pl.alek.android.passenger.online.service.api;
 
 import java.util.Map;
 
-import pl.alek.android.passenger.model.ServerInfoResponse;
+import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.online.PassengerInterface;
 import retrofit2.Call;
 import retrofit2.http.FieldMap;
@@ -19,6 +19,6 @@ public interface StationInfoAPI {
             PassengerInterface.HEADER_USER_AGENT_MOZILLA})
     @POST("/" + PassengerInterface.TRACK + "/" + PassengerInterface.DOWNLOAD)
     @FormUrlEncoded
-    Call<ServerInfoResponse> loadData(
+    Call<GeneralStationInfo> loadData(
             @FieldMap Map<String, Object> params);
 }
