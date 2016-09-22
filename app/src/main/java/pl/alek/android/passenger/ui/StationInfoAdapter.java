@@ -121,12 +121,24 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
     private String getMsg(List<List<String>> delayCauses) {
         String causes = "";
+        List<String> infoCauses = new ArrayList<String>();
+        int j = 0;
         for (int i = 0; i < delayCauses.size(); i++) {
             int nrOfCause = Integer.parseInt(delayCauses.get(i).get(1));
-            causes += (i + 1) + ". " + mDelayCauses.get(nrOfCause) + "\n";
-            if (i < delayCauses.size() - 1) {
-                causes += "\n";
+            String cause = mDelayCauses.get(nrOfCause);
+            if (!infoCauses.contains(cause)) {
+                causes += (i + 1 - j) + ". " + cause + "\n";
+                if (i < delayCauses.size() - 1) {
+                    causes += "\n";
+                }
+                infoCauses.add(cause);
+            } else {
+                j++;
             }
+        }
+        String lastChars = causes.substring(causes.length() - 2);
+        if (lastChars.equals("\n\n")) {
+            causes = causes.substring(0, causes.length() - 1);
         }
         return causes;
     }
