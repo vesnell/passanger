@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -28,7 +29,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
@@ -39,7 +39,7 @@ import retrofit2.Response;
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment implements Callback<ArrayList<Station>> {
+public class MainFragment extends Fragment implements Callback<ArrayList<Station>>, ServiceCallback.OnConnectionExceptionListener {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -141,7 +141,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     }
 
     private void sendRequest(String stationName) {
-        ServiceCallback serviceCallback = new ServiceCallback(this, stationName);
+        ServiceCallback serviceCallback = new ServiceCallback(this, stationName, this);
         ServiceGenerator.sendRequest(serviceCallback);
         isWaitingForResponse = true;
     }
@@ -169,13 +169,25 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
 
     @Override
     public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
+        cleanUI(t.getLocalizedMessage());
+        Log.e(TAG, t.getMessage());
+    }
+
+    @Override
+    public void onConnectionException(final IOException err) {
+        Log.e(TAG, err.getMessage());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                cleanUI(err.getLocalizedMessage());
+            }
+        });
+    }
+
+    private void cleanUI(String msg) {
         isWaitingForResponse = false;
         setProgressBarVisible(false);
-        try {
-            throw new ConnectionFailureException(t);
-        } catch (ConnectionFailureException e) {
-            Log.e(TAG, t.getMessage());
-        }
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     private void setProgressBarVisible(boolean isVisible) {

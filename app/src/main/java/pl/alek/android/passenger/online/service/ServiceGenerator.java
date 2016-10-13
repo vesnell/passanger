@@ -7,6 +7,8 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,6 +25,7 @@ public class ServiceGenerator {
 
     public static final String API_BASE_URL = "https://portalpasazera.pl";
     private static final String TRACK_URL = API_BASE_URL + "/" + PassengerInterface.TRACK;
+    private static final long TIMEOUT_SEC = 10;
 
     private static Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -51,6 +54,8 @@ public class ServiceGenerator {
     private static OkHttpClient setClient() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder
+                .connectTimeout(TIMEOUT_SEC, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SEC, TimeUnit.SECONDS)
                 .cookieJar(cookie)
                 .addInterceptor(addLog());
         return builder.build();

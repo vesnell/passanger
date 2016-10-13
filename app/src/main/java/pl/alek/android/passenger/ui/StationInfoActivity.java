@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,6 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.online.service.api.StationInfoAPI;
@@ -124,11 +124,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
                     setEmptyInfo();
                 }
             } else {
-                try {
-                    throw new ConnectionFailureException("response.body() is null");
-                } catch (ConnectionFailureException e) {
-                    Log.e(TAG, response.message());
-                }
+                //response.body() is null
+                Log.e(TAG, response.message());
             }
         } else {
             refreshRequestParams();
@@ -162,11 +159,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
     @Override
     public void onFailure(Call<GeneralStationInfo> call, Throwable t) {
         setProgressBarVisible(false);
-        try {
-            throw new ConnectionFailureException(t);
-        } catch (ConnectionFailureException e) {
-            Log.e(TAG, t.getMessage());
-        }
+        Log.e(TAG, t.getMessage());
+        Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
     }
 
     private void setProgressBarVisible(boolean isVisible) {

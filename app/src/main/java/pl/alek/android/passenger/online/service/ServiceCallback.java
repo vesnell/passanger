@@ -11,7 +11,6 @@ import okhttp3.Response;
 
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.online.service.api.StationsAPI;
-import pl.alek.android.passenger.online.exception.ConnectionFailureException;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.StationInfoActivity;
 
@@ -25,10 +24,12 @@ public class ServiceCallback implements Callback {
     private retrofit2.Callback<ArrayList<Station>> callback;
     private StationInfoActivity stationInfoActivity;
     private String stationName;
+    private OnConnectionExceptionListener listener;
 
-    public ServiceCallback(retrofit2.Callback<ArrayList<Station>> callback, String stationName) {
+    public ServiceCallback(retrofit2.Callback<ArrayList<Station>> callback, String stationName, OnConnectionExceptionListener listener) {
         this.callback = callback;
         this.stationName = stationName;
+        this.listener = listener;
     }
 
     public ServiceCallback(StationInfoActivity stationInfoActivity) {
@@ -37,10 +38,9 @@ public class ServiceCallback implements Callback {
 
     @Override
     public void onFailure(Call call, IOException err) {
-        try {
-            throw new ConnectionFailureException(err.getMessage());
-        } catch (ConnectionFailureException e) {
-            Log.e(TAG, e.getMessage());
+        if (listener != null) {
+            listener.onConnectionException(err);
+            Log.e(TAG, err.getMessage());
         }
     }
 
@@ -63,5 +63,9 @@ public class ServiceCallback implements Callback {
 
     private boolean isRefreshRequest() {
         return stationInfoActivity != null;
+    }
+
+    public interface OnConnectionExceptionListener {
+        void onConnectionException(IOException ex);
     }
 }
