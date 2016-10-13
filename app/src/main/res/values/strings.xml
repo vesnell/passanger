@@ -18,8 +18,8 @@
     <string name="menu_open">Open menu</string>
     <string name="menu_close">Close menu</string>
     <string name="about_app_text">Using this app you can check the delay of your train.\n
-        This program use new API of PKP\'s infopasażer.\n\n
-        PKP\'s infopasażer is a official network service which belongs to PKP. Author does not assume any responsibility for the accuracy of this data and consequences associated with them.\n\n
+        This program use new API of PKP\'s portal pasażera.\n\n
+        PKP\'s portal pasażera is a official network service which belongs to PKP. Author does not assume any responsibility for the accuracy of this data and consequences associated with them.\n\n
         This is a beta version and there can be occur some bugs.</string>
     <string name="btn_refresh">Refresh</string>
     <string name="alert_msg_500">There is a server connection problem. Try again later</string>

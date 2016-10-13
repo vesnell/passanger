@@ -18,8 +18,8 @@
     <string name="menu_open">Otwarcie menu</string>
     <string name="menu_close">Zamknięcie menu</string>
     <string name="about_app_text">Aplikacja ta daje możliwość sprawdzenia jakie opóźnienie ma dany pociąg.\n
-        Program pobiera dane wykorzystując do komunikacji nowe API serwisu infopasażer.\n\n
-        Infopasażer to oficjalny serwis należący do PKP i w związku z tym autor aplikacji nie ponosi odpowiedzialność za dokładność i poprawność wyświetlanych w aplikacji danych, a także za konsekwencje z tym związane.\n\n
+        Program pobiera dane wykorzystując do komunikacji nowe API serwisu portal pasażera.\n\n
+        Portal pasażera to oficjalny serwis należący do PKP i w związku z tym autor aplikacji nie ponosi odpowiedzialność za dokładność i poprawność wyświetlanych w aplikacji danych, a także za konsekwencje z tym związane.\n\n
         Aplikacja jest wersją beta czyli testową i mogą pojawiać się nieoczekiwane błędy.</string>
     <string name="btn_refresh">Odśwież</string>
     <string name="alert_msg_500">Wystąpiły problemy z połączeniem z serwerem. Proszę spróbować później</string>
