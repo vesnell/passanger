@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
 import pl.alek.android.passenger.online.service.api.StationInfoAPI;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
@@ -36,8 +34,7 @@ import retrofit2.Response;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo>,
-        ServiceCallback.OnConnectionExceptionListener {
+public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo> {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -137,8 +134,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
     private void refreshRequestParams() {
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
-            ServiceCallback serviceCallback = new ServiceCallback(this);
-            ServiceGenerator.sendRequest(serviceCallback);
+            trySetReqVerToken();
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);
@@ -156,6 +152,20 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    private void trySetReqVerToken() {
+        new PassengerReqVerToken(this, new PassengerReqVerToken.OnDownloadRequestTokenListener() {
+            @Override
+            public void onSuccess() {
+                refresh();
+            }
+
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(StationInfoActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
+        }).setReqVerToken();
     }
 
     @Override
@@ -185,17 +195,5 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
         llNoResult.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void onConnectionException(final IOException err) {
-        Log.e(TAG, err.getMessage());
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.e(TAG, err.getMessage());
-                cleanUI(err.getLocalizedMessage());
-            }
-        });
     }
 }

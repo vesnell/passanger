@@ -9,12 +9,9 @@ import com.google.gson.GsonBuilder;
 
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.alek.android.passenger.App;
-import pl.alek.android.passenger.online.PassengerInterface;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -24,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ServiceGenerator {
 
     public static final String API_BASE_URL = "https://portalpasazera.pl";
-    private static final String TRACK_URL = API_BASE_URL + "/" + PassengerInterface.TRACK;
     private static final long TIMEOUT_SEC = 10;
 
     private static Gson gson = new GsonBuilder()
@@ -32,7 +28,7 @@ public class ServiceGenerator {
             .create();
 
     private static ClearableCookieJar cookie = instantCookie();
-    private static OkHttpClient client = setClient();
+    public static OkHttpClient client = setClient();
 
     public static <S> S createService(Class<S> serviceClass) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -42,13 +38,6 @@ public class ServiceGenerator {
                 .build();
 
         return retrofit.create(serviceClass);
-    }
-
-    public static void sendRequest(Callback callback) {
-        Request request = new Request.Builder()
-                .url(TRACK_URL)
-                .build();
-        client.newCall(request).enqueue(callback);
     }
 
     private static OkHttpClient setClient() {

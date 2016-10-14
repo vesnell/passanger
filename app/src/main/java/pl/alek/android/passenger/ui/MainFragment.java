@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,8 +28,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.ServiceCallback;
 import pl.alek.android.passenger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.online.service.api.StationsAPI;
+import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +39,7 @@ import retrofit2.Response;
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment implements Callback<ArrayList<Station>>, ServiceCallback.OnConnectionExceptionListener {
+public class MainFragment extends Fragment implements Callback<ArrayList<Station>> {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -117,21 +117,35 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     @OnClick(R.id.btnStationSearch)
     public void submit() {
         if (isBtnEnabled) {
-            prepareSubmitBtnAction();
+            if (AndroidUtils.isNetworkAvailable(getContext())) {
+                prepareSubmitBtnAction();
+                trySetReqVerToken();
+            } else {
+                showAlertDialog(R.string.alert_msg_no_internet);
+            }
         } else {
             showAlertDialog(R.string.alert_msg_search);
         }
     }
 
+    private void trySetReqVerToken() {
+        new PassengerReqVerToken(getActivity(), new PassengerReqVerToken.OnDownloadRequestTokenListener() {
+            @Override
+            public void onSuccess() {
+                String stationName = etStationSearch.getText().toString();
+                sendRequest(stationName);
+            }
+
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+            }
+        }).setReqVerToken();
+    }
+
     private void prepareSubmitBtnAction() {
-        if (AndroidUtils.isNetworkAvailable(getContext())) {
-            AndroidUtils.hideKeyboard(getActivity());
-            setProgressBarVisible(true);
-            String stationName = etStationSearch.getText().toString();
-            sendRequest(stationName);
-        } else {
-            showAlertDialog(R.string.alert_msg_no_internet);
-        }
+        AndroidUtils.hideKeyboard(getActivity());
+        setProgressBarVisible(true);
     }
 
     private void showAlertDialog(int msg) {
@@ -148,8 +162,9 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     }
 
     private void sendRequest(String stationName) {
-        ServiceCallback serviceCallback = new ServiceCallback(this, stationName, this);
-        ServiceGenerator.sendRequest(serviceCallback);
+        StationsAPI stations = ServiceGenerator.createService(StationsAPI.class);
+        Call<ArrayList<Station>> call = stations.loadStations(stationName);
+        call.enqueue(this);
         isWaitingForResponse = true;
     }
 
@@ -178,17 +193,6 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
         cleanUI(t.getLocalizedMessage());
         Log.e(TAG, t.getMessage());
-    }
-
-    @Override
-    public void onConnectionException(final IOException err) {
-        Log.e(TAG, err.getMessage());
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                cleanUI(err.getLocalizedMessage());
-            }
-        });
     }
 
     private void cleanUI(String msg) {

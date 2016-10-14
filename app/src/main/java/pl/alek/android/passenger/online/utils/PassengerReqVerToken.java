@@ -1,5 +1,8 @@
 package pl.alek.android.passenger.online.utils;
 
+import android.app.Activity;
+import android.util.Log;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,6 +11,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import pl.alek.android.passenger.online.PassengerInterface;
@@ -18,17 +24,80 @@ import pl.alek.android.passenger.online.service.ServiceGenerator;
  */
 public class PassengerReqVerToken {
 
+    private static final String TAG = "PassengerReqVerToken";
+
+    private static final String TRACK_URL = ServiceGenerator.API_BASE_URL + "/" + PassengerInterface.TRACK;
+
     public static String reqVerToken;
 
-    public static void setReqVerToken(Response response) throws IOException {
-        ResponseBody responseBody = response.body();
-        String bodyHtml = responseBody.string();
-        responseBody.close();
+    private Activity activity;
+    private OnDownloadRequestTokenListener listener;
+
+    public PassengerReqVerToken(Activity activity, OnDownloadRequestTokenListener listener) {
+        this.activity = activity;
+        this.listener = listener;
+    }
+
+    public void setReqVerToken() {
+        Request request = new Request.Builder()
+                .url(TRACK_URL)
+                .build();
+        ServiceGenerator.client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                onErrorMsg(e.getMessage(), e.getLocalizedMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                onOpenResponse(response);
+            }
+        });
+    }
+
+    private void onOpenResponse(final Response response) {
+        try {
+            ResponseBody responseBody = response.body();
+            String bodyHtml = responseBody.string();
+            responseBody.close();
+            parseBody(bodyHtml);
+        } catch (IOException e) {
+            onErrorMsg(e.getMessage(), e.getLocalizedMessage());
+        }
+    }
+
+    private void parseBody(String bodyHtml) throws IOException {
         Document doc = Jsoup.parse(bodyHtml);
         if (doc != null) {
             Element input = doc.select("input[name=" + PassengerInterface.REQ_VER_TOK + "]").first();
-            reqVerToken = input.attr("value");
+            if (input != null) {
+                reqVerToken = input.attr("value");
+                onSuccessMsg();
+            } else {
+                onErrorMsg("Empty body", "Could not get html body of Portal Pasażera");
+            }
+        } else {
+            onErrorMsg("Empty body", "Could not get html body of Portal Pasażera");
         }
+    }
+
+    private void onSuccessMsg() {
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listener.onSuccess();
+            }
+        });
+    }
+
+    private void onErrorMsg(String msg, final String locMsg) {
+        Log.e(TAG, msg);
+        this.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listener.onError(locMsg);
+            }
+        });
     }
 
     public static Map<String, Object> getStationInfoParams(Integer stationID) {
@@ -38,5 +107,10 @@ public class PassengerReqVerToken {
         params.put(PassengerInterface.AVAILABLE_KH, PassengerInterface.AVAILABLE_KH_VALUE);
         params.put(PassengerInterface.REQ_VER_TOK, reqVerToken);
         return params;
+    }
+
+    public interface OnDownloadRequestTokenListener {
+        void onSuccess();
+        void onError(String msg);
     }
 }
