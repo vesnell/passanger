@@ -55,6 +55,45 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     private boolean isBtnEnabled = false;
     private boolean isWaitingForResponse = false;
 
+    private class MyTextWatcher implements TextWatcher {
+        @Override
+        public void afterTextChanged(Editable editable) {
+            enableSubmitIfReady(editable.length());
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    }
+
+    private void enableSubmitIfReady(int editableLength) {
+        boolean isReady = editableLength >= START_SEARCH_SIZE_TEXT;
+        setBtnEnabled(isReady);
+    }
+
+    //if on keyboard press ok
+    private class PressOKOnKeyListener implements View.OnKeyListener {
+        @Override
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (event.getAction() != KeyEvent.ACTION_DOWN) {
+                return true;
+            }
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_ENTER:
+                    submit();
+                    break;
+                case KeyEvent.KEYCODE_BACK:
+                    getActivity().onBackPressed();
+                    break;
+            }
+            return true;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
@@ -63,39 +102,8 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
         setRetainInstance(true);
 
         setBtnBgColor(false);
-        etStationSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable editable) {
-                enableSubmitIfReady(editable.length());
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        //if on keyboard press ok
-        etStationSearch.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() != KeyEvent.ACTION_DOWN) {
-                    return true;
-                }
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_ENTER:
-                        submit();
-                        break;
-                    case KeyEvent.KEYCODE_BACK:
-                        getActivity().onBackPressed();
-                        break;
-                }
-                return true;
-            }
-        });
+        etStationSearch.addTextChangedListener(new MyTextWatcher());
+        etStationSearch.setOnKeyListener(new PressOKOnKeyListener());
 
         if (savedInstanceState != null) {
             isWaitingForResponse = savedInstanceState.getBoolean(IS_WAITING_FOR_RESP_KEY);
@@ -106,24 +114,23 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
         return v;
     }
 
-    private void enableSubmitIfReady(int editableLength) {
-        boolean isReady = editableLength >= START_SEARCH_SIZE_TEXT;
-        setBtnEnabled(isReady);
-    }
-
     @OnClick(R.id.btnStationSearch)
     public void submit() {
         if (isBtnEnabled) {
-            if (AndroidUtils.isNetworkAvailable(getContext())) {
-                AndroidUtils.hideKeyboard(getActivity());
-                setProgressBarVisible(true);
-                String stationName = etStationSearch.getText().toString();
-                sendRequest(stationName);
-            } else {
-                showAlertDialog(R.string.alert_msg_no_internet);
-            }
+            prepareSubmitBtnAction();
         } else {
             showAlertDialog(R.string.alert_msg_search);
+        }
+    }
+
+    private void prepareSubmitBtnAction() {
+        if (AndroidUtils.isNetworkAvailable(getContext())) {
+            AndroidUtils.hideKeyboard(getActivity());
+            setProgressBarVisible(true);
+            String stationName = etStationSearch.getText().toString();
+            sendRequest(stationName);
+        } else {
+            showAlertDialog(R.string.alert_msg_no_internet);
         }
     }
 

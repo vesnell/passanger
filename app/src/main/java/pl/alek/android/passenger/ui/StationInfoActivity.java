@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,8 @@ import retrofit2.Response;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo> {
+public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo>,
+        ServiceCallback.OnConnectionExceptionListener {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -158,9 +160,13 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
 
     @Override
     public void onFailure(Call<GeneralStationInfo> call, Throwable t) {
-        setProgressBarVisible(false);
         Log.e(TAG, t.getMessage());
-        Toast.makeText(this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        cleanUI(t.getLocalizedMessage());
+    }
+
+    private void cleanUI(String msg) {
+        setProgressBarVisible(false);
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     private void setProgressBarVisible(boolean isVisible) {
@@ -179,5 +185,17 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
         llNoResult.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onConnectionException(final IOException err) {
+        Log.e(TAG, err.getMessage());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, err.getMessage());
+                cleanUI(err.getLocalizedMessage());
+            }
+        });
     }
 }
