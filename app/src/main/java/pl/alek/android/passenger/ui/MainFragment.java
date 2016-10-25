@@ -40,7 +40,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment /*implements Callback<ArrayList<Station>>*/ {
+public class MainFragment extends Fragment {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;

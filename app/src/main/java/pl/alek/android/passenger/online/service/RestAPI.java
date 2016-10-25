@@ -8,13 +8,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.alek.android.passenger.App;
+import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.service.api.StationInfoAPI;
 import pl.alek.android.passenger.online.service.api.StationsAPI;
+import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -73,4 +77,10 @@ public class RestAPI {
     public Call<ArrayList<Station>> getStations(String stationName) {
         return ((StationsAPI) api).loadStations(stationName);
     }
+
+    public Call<GeneralStationInfo> getStationInfo(Integer stationID) {
+        Map<String, Object> params = PassengerReqVerToken.getStationInfoParams(stationID);
+        return ((StationInfoAPI) api).loadData(params);
+    }
+
 }

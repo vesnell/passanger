@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,18 +22,19 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.RestAPI;
-import pl.alek.android.passenger.online.service.api.StationInfoAPI;
+import pl.alek.android.passenger.online.manager.StationInfoManager;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity implements Callback<GeneralStationInfo> {
+public class StationInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -51,6 +51,8 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
     private Station station;
     private StationInfoAdapter mAdapter;
     private int requestsIterator = 0;
+
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +95,33 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
     }
 
     private void sendRequest(Station station) {
-        StationInfoAPI stationInfoAPI = null; //RestAPI.createService(StationInfoAPI.class);
-        Map<String, Object> params = PassengerReqVerToken.getStationInfoParams(station.ID);
-        Call<GeneralStationInfo> call = stationInfoAPI.loadData(params);
-        call.enqueue(this);
+        StationInfoManager stationInfoManager = new StationInfoManager();
+        subscription = stationInfoManager.getStationInfo(station.ID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<GeneralStationInfo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(TAG, e.getMessage());
+                        cleanUI(e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onNext(GeneralStationInfo generalStationInfo) {
+                        setProgressBarVisible(false);
+                        List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
+                        if (scheduleList.size() > 0) {
+                            mAdapter = new StationInfoAdapter(getApplicationContext(), scheduleList, generalStationInfo.Utrudnienia);
+                            rvStationInfoList.setAdapter(mAdapter);
+                        } else {
+                            setEmptyInfo();
+                        }
+                    }
+                });
     }
 
     private void showAlertDialogNoInternetConn() {
@@ -107,28 +132,6 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
             swipeContainer.setRefreshing(false);
         }
         showAlertDialog(R.string.alert_msg_no_internet);
-    }
-
-    @Override
-    public void onResponse(Call<GeneralStationInfo> call, Response<GeneralStationInfo> response) {
-        setProgressBarVisible(false);
-        if (response.code() == 200) {
-            if (response.body() != null) {
-                GeneralStationInfo generalStationInfo = response.body();
-                List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
-                if (scheduleList.size() > 0) {
-                    mAdapter = new StationInfoAdapter(this, scheduleList, generalStationInfo.Utrudnienia);
-                    rvStationInfoList.setAdapter(mAdapter);
-                } else {
-                    setEmptyInfo();
-                }
-            } else {
-                //response.body() is null
-                Log.e(TAG, response.message());
-            }
-        } else {
-            refreshRequestParams();
-        }
     }
 
     private void refreshRequestParams() {
@@ -168,12 +171,6 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
         }).setReqVerToken();
     }
 
-    @Override
-    public void onFailure(Call<GeneralStationInfo> call, Throwable t) {
-        Log.e(TAG, t.getMessage());
-        cleanUI(t.getLocalizedMessage());
-    }
-
     private void cleanUI(String msg) {
         setProgressBarVisible(false);
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
@@ -195,5 +192,13 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
         llNoResult.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 }
