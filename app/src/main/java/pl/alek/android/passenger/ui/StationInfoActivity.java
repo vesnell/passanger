@@ -102,20 +102,20 @@ public class StationInfoActivity extends AppCompatActivity {
                 .subscribe(new Observer<GeneralStationInfo>() {
                     @Override
                     public void onCompleted() {
+                        setProgressBarVisible(false);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, e.getMessage());
-                        cleanUI(e.getLocalizedMessage());
+                        refreshRequestParams();
                     }
 
                     @Override
                     public void onNext(GeneralStationInfo generalStationInfo) {
-                        setProgressBarVisible(false);
                         List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
                         if (scheduleList.size() > 0) {
-                            mAdapter = new StationInfoAdapter(getApplicationContext(), scheduleList, generalStationInfo.Utrudnienia);
+                            mAdapter = new StationInfoAdapter(StationInfoActivity.this, scheduleList, generalStationInfo.Utrudnienia);
                             rvStationInfoList.setAdapter(mAdapter);
                         } else {
                             setEmptyInfo();
