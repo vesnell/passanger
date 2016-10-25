@@ -23,7 +23,7 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.online.service.RestAPI;
 import pl.alek.android.passenger.online.service.api.StationInfoAPI;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
@@ -93,7 +93,7 @@ public class StationInfoActivity extends AppCompatActivity implements Callback<G
     }
 
     private void sendRequest(Station station) {
-        StationInfoAPI stationInfoAPI = ServiceGenerator.createService(StationInfoAPI.class);
+        StationInfoAPI stationInfoAPI = null; //RestAPI.createService(StationInfoAPI.class);
         Map<String, Object> params = PassengerReqVerToken.getStationInfoParams(station.ID);
         Call<GeneralStationInfo> call = stationInfoAPI.loadData(params);
         call.enqueue(this);

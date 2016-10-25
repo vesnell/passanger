@@ -28,18 +28,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.ServiceGenerator;
-import pl.alek.android.passenger.online.service.api.StationsAPI;
+import pl.alek.android.passenger.online.manager.StationsManager;
 import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment implements Callback<ArrayList<Station>> {
+public class MainFragment extends Fragment /*implements Callback<ArrayList<Station>>*/ {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -51,6 +52,8 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     Button btnStationSearch;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+
+    private Subscription subscription;
 
     private boolean isBtnEnabled = false;
     private boolean isWaitingForResponse = false;
@@ -108,7 +111,9 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
         if (savedInstanceState != null) {
             isWaitingForResponse = savedInstanceState.getBoolean(IS_WAITING_FOR_RESP_KEY);
             setProgressBarVisible(isWaitingForResponse);
-            enableSubmitIfReady(etStationSearch.getText().length());
+            if (!isWaitingForResponse) {
+                enableSubmitIfReady(etStationSearch.getText().length());
+            }
         }
 
         return v;
@@ -129,6 +134,7 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     }
 
     private void trySetReqVerToken() {
+        isWaitingForResponse = true;
         new PassengerReqVerToken(getActivity(), new PassengerReqVerToken.OnDownloadRequestTokenListener() {
             @Override
             public void onSuccess() {
@@ -162,37 +168,37 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     }
 
     private void sendRequest(String stationName) {
-        StationsAPI stations = ServiceGenerator.createService(StationsAPI.class);
-        Call<ArrayList<Station>> call = stations.loadStations(stationName);
-        call.enqueue(this);
-        isWaitingForResponse = true;
-    }
+        StationsManager stationsManager = new StationsManager();
+        subscription = stationsManager.getStations(stationName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<Station>>() {
+                    @Override
+                    public void onCompleted() {
+                        isWaitingForResponse = false;
+                        setProgressBarVisible(false);
+                        setBtnEnabled(true);
+                    }
 
-    @Override
-    public void onResponse(Call<ArrayList<Station>> call, Response<ArrayList<Station>> response) {
-        isWaitingForResponse = false;
-        setProgressBarVisible(false);
-        setBtnEnabled(true);
-        if (response.code() == 200) {
-            ArrayList<Station> stations = response.body();
-            if (stations.size() == 1) {
-                Station station = stations.get(0);
-                openStationInfoActivity(station);
-            } else if (stations.size() > 1) {
-                Collections.sort(stations);
-                openStationsListActivity(stations);
-            } else {
-                Toast.makeText(getContext(), R.string.station_not_found, Toast.LENGTH_LONG).show();
-            }
-        } else {
-            showAlertDialog(R.string.alert_msg_500);
-        }
-    }
+                    @Override
+                    public void onError(Throwable e) {
+                        cleanUI(e.getLocalizedMessage());
+                        Log.e(TAG, e.getMessage());
+                    }
 
-    @Override
-    public void onFailure(Call<ArrayList<Station>> call, Throwable t) {
-        cleanUI(t.getLocalizedMessage());
-        Log.e(TAG, t.getMessage());
+                    @Override
+                    public void onNext(ArrayList<Station> stations) {
+                        if (stations.size() == 1) {
+                            Station station = stations.get(0);
+                            openStationInfoActivity(station);
+                        } else if (stations.size() > 1) {
+                            Collections.sort(stations);
+                            openStationsListActivity(stations);
+                        } else {
+                            Toast.makeText(getContext(), R.string.station_not_found, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     private void cleanUI(String msg) {
@@ -258,5 +264,13 @@ public class MainFragment extends Fragment implements Callback<ArrayList<Station
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(IS_WAITING_FOR_RESP_KEY, isWaitingForResponse);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 }

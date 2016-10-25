@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import pl.alek.android.passenger.online.PassengerInterface;
-import pl.alek.android.passenger.online.service.ServiceGenerator;
+import pl.alek.android.passenger.online.service.RestAPI;
 
 /**
  * Created by Lenovo on 23.08.2016.
@@ -26,7 +26,7 @@ public class PassengerReqVerToken {
 
     private static final String TAG = "PassengerReqVerToken";
 
-    private static final String TRACK_URL = ServiceGenerator.API_BASE_URL + "/" + PassengerInterface.TRACK;
+    private static final String TRACK_URL = RestAPI.API_BASE_URL + "/" + PassengerInterface.TRACK;
 
     public static String reqVerToken;
 
@@ -42,7 +42,7 @@ public class PassengerReqVerToken {
         Request request = new Request.Builder()
                 .url(TRACK_URL)
                 .build();
-        ServiceGenerator.client.newCall(request).enqueue(new Callback() {
+        RestAPI.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 onErrorMsg(e.getMessage(), e.getLocalizedMessage());

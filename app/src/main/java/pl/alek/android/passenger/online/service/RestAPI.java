@@ -7,18 +7,22 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.alek.android.passenger.App;
+import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.online.service.api.StationsAPI;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Lenovo on 17.08.2016.
  */
-public class ServiceGenerator {
+public class RestAPI {
 
     public static final String API_BASE_URL = "https://portalpasazera.pl";
     private static final long TIMEOUT_SEC = 10;
@@ -30,7 +34,13 @@ public class ServiceGenerator {
     private static ClearableCookieJar cookie = instantCookie();
     public static OkHttpClient client = setClient();
 
-    public static <S> S createService(Class<S> serviceClass) {
+    private Object api;
+
+    public RestAPI(Class<?> apiClass) {
+        api = createService(apiClass);
+    }
+
+    private <S> S createService(Class<S> serviceClass) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .client(client)
@@ -58,5 +68,9 @@ public class ServiceGenerator {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         return logging;
+    }
+
+    public Call<ArrayList<Station>> getStations(String stationName) {
+        return ((StationsAPI) api).loadStations(stationName);
     }
 }
