@@ -22,8 +22,10 @@
             </intent-filter>
         </activity>
         <activity android:name="pl.alek.android.passenger.ui.MainActivity"/>
-        <activity android:name="pl.alek.android.passenger.ui.StationsListActivity"/>
-        <activity android:name="pl.alek.android.passenger.ui.StationInfoActivity"/>
+        <activity android:name="pl.alek.android.passenger.ui.StationsListActivity"
+            android:launchMode="singleInstance"/>
+        <activity android:name="pl.alek.android.passenger.ui.StationInfoActivity"
+            android:launchMode="singleInstance"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
