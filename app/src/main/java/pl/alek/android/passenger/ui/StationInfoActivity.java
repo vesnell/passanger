@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity {
+public class StationInfoActivity extends AppCompatActivity implements PassengerViewInterface {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -157,7 +157,8 @@ public class StationInfoActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void trySetReqVerToken() {
+    @Override
+    public void trySetReqVerToken() {
         new PassengerReqVerToken(this, new PassengerReqVerToken.OnDownloadRequestTokenListener() {
             @Override
             public void onSuccess() {
@@ -166,7 +167,8 @@ public class StationInfoActivity extends AppCompatActivity {
 
             @Override
             public void onError(String msg) {
-                Toast.makeText(StationInfoActivity.this, msg, Toast.LENGTH_LONG).show();
+                cleanUI(msg);
+                Log.e(TAG, msg);
             }
         }).setReqVerToken();
     }

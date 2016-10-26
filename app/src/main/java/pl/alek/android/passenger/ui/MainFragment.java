@@ -40,7 +40,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements PassengerViewInterface {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -133,7 +133,8 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private void trySetReqVerToken() {
+    @Override
+    public void trySetReqVerToken() {
         isWaitingForResponse = true;
         new PassengerReqVerToken(getActivity(), new PassengerReqVerToken.OnDownloadRequestTokenListener() {
             @Override
@@ -144,7 +145,8 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onError(String msg) {
-                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                cleanUI(msg);
+                Log.e(TAG, msg);
             }
         }).setReqVerToken();
     }
