@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.online.utils;
+package pl.alek.android.passenger.online;
 
 import android.app.Activity;
 import android.util.Log;
@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import pl.alek.android.passenger.online.PassengerInterface;
-import pl.alek.android.passenger.online.service.RestAPI;
+import pl.alek.android.passenger.rest.RestAPI;
 
 /**
  * Created by Lenovo on 23.08.2016.

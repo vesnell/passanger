@@ -22,8 +22,8 @@ import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.manager.StationInfoManager;
-import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
+import pl.alek.android.passenger.rest.manager.StationInfoManager;
+import pl.alek.android.passenger.online.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
 import rx.Observer;
@@ -38,6 +38,8 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
+
+    private static final String GENERAL_INFO_KEY = "generalInfoKey";
 
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
@@ -75,7 +77,18 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
                     }
                 });
 
-        prepareStationInfoView(station, false);
+        if (savedInstanceState != null) {
+            GeneralStationInfo generalStationInfo = (GeneralStationInfo) savedInstanceState.getSerializable(GENERAL_INFO_KEY);
+            if (generalStationInfo != null) {
+                mAdapter = new StationInfoAdapter(this, generalStationInfo);
+                rvStationInfoList.setAdapter(mAdapter);
+                setProgressBarVisible(false);
+            } else {
+                prepareStationInfoView(station, false);
+            }
+        } else {
+            prepareStationInfoView(station, false);
+        }
     }
 
     @OnClick(R.id.btnRefresh)
@@ -115,13 +128,21 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
                     public void onNext(GeneralStationInfo generalStationInfo) {
                         List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
                         if (scheduleList.size() > 0) {
-                            mAdapter = new StationInfoAdapter(StationInfoActivity.this, scheduleList, generalStationInfo.Utrudnienia);
-                            rvStationInfoList.setAdapter(mAdapter);
+                            updateGeneralInfoList(generalStationInfo);
                         } else {
                             setEmptyInfo();
                         }
                     }
                 });
+    }
+
+    private void updateGeneralInfoList(GeneralStationInfo generalStationInfo) {
+        if (mAdapter != null) {
+            mAdapter.updateData(generalStationInfo);
+        } else {
+            mAdapter = new StationInfoAdapter(StationInfoActivity.this, generalStationInfo);
+            rvStationInfoList.setAdapter(mAdapter);
+        }
     }
 
     private void showAlertDialogNoInternetConn() {
@@ -194,6 +215,14 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
         llNoResult.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mAdapter != null) {
+            outState.putSerializable(GENERAL_INFO_KEY, mAdapter.getItems());
+        }
     }
 
     @Override

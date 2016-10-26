@@ -2,6 +2,7 @@ package pl.alek.android.passenger.model;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -12,7 +13,7 @@ import pl.alek.android.passenger.R;
 /**
  * Created by Lenovo on 23.08.2016.
  */
-public class TrainInfo {
+public class TrainInfo implements Serializable {
 
     private static final String DATE_FORMAT = "HH:mm";
     private static final String TIMEZONE_UTC = "UTC";

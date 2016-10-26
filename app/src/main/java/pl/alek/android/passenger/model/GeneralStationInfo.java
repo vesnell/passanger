@@ -1,11 +1,12 @@
 package pl.alek.android.passenger.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class GeneralStationInfo {
+public class GeneralStationInfo implements Serializable {
     public String CzasStatystyk;
     public String CzasImportu;
     public String CzasObliczen;

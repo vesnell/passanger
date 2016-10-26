@@ -1,10 +1,10 @@
-package pl.alek.android.passenger.online.manager;
+package pl.alek.android.passenger.rest.manager;
 
 import java.io.IOException;
 
 import pl.alek.android.passenger.model.GeneralStationInfo;
-import pl.alek.android.passenger.online.service.RestAPI;
-import pl.alek.android.passenger.online.service.api.StationInfoAPI;
+import pl.alek.android.passenger.rest.RestAPI;
+import pl.alek.android.passenger.rest.api.StationInfoAPI;
 import retrofit2.Call;
 import retrofit2.Response;
 import rx.Observable;

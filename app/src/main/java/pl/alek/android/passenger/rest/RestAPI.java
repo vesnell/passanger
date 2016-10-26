@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.online.service;
+package pl.alek.android.passenger.rest;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -16,9 +16,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import pl.alek.android.passenger.App;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.service.api.StationInfoAPI;
-import pl.alek.android.passenger.online.service.api.StationsAPI;
-import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
+import pl.alek.android.passenger.rest.api.StationInfoAPI;
+import pl.alek.android.passenger.rest.api.StationsAPI;
+import pl.alek.android.passenger.online.PassengerReqVerToken;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

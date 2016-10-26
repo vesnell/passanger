@@ -28,8 +28,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
-import pl.alek.android.passenger.online.manager.StationsManager;
-import pl.alek.android.passenger.online.utils.PassengerReqVerToken;
+import pl.alek.android.passenger.rest.manager.StationsManager;
+import pl.alek.android.passenger.online.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
 import rx.Observer;

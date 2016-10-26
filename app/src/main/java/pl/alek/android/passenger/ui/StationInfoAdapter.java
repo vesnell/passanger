@@ -20,6 +20,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.TrainInfo;
 
 /**
@@ -30,6 +31,7 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     private Context mContext;
     private List<TrainInfo> mDataset = new ArrayList<TrainInfo>();
     private List<String> mDelayCauses = new ArrayList<String>();
+    private GeneralStationInfo generalStationInfo;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.llRailInfo)
@@ -55,10 +57,15 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         }
     }
 
-    public StationInfoAdapter(Context context, List<TrainInfo> myDataset, List<String> delayCauses) {
-        mDataset = myDataset;
+    public StationInfoAdapter(Context context, GeneralStationInfo generalStationInfo) {
         mContext = context;
-        mDelayCauses = delayCauses;
+        init(generalStationInfo);
+    }
+
+    private void init(GeneralStationInfo generalStationInfo) {
+        this.generalStationInfo = generalStationInfo;
+        mDataset = generalStationInfo.Rozklad;
+        mDelayCauses = generalStationInfo.Utrudnienia;
     }
 
     @Override
@@ -185,5 +192,14 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public GeneralStationInfo getItems() {
+        return generalStationInfo;
+    }
+
+    public void updateData(GeneralStationInfo generalStationInfo) {
+        init(generalStationInfo);
+        notifyDataSetChanged();
     }
 }

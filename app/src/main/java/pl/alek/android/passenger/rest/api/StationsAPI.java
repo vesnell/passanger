@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.online.service.api;
+package pl.alek.android.passenger.rest.api;
 
 import java.util.ArrayList;
 
