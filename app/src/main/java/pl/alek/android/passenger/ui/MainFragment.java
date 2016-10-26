@@ -113,6 +113,8 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
             setProgressBarVisible(isWaitingForResponse);
             if (!isWaitingForResponse) {
                 enableSubmitIfReady(etStationSearch.getText().length());
+            } else {
+                trySetReqVerToken();
             }
         }
 
@@ -264,8 +266,8 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(IS_WAITING_FOR_RESP_KEY, isWaitingForResponse);
         super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_WAITING_FOR_RESP_KEY, isWaitingForResponse);
     }
 
     @Override
