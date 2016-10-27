@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.stationinfo;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import pl.alek.android.passenger.rest.manager.StationInfoManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
+import pl.alek.android.passenger.ui.util.PassengerViewInterface;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;

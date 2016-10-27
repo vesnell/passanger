@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.stationslist;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.ui.stationinfo.StationInfoActivity;
+import pl.alek.android.passenger.ui.util.StationsListAdapter;
 
 /**
  * Created by Lenovo on 22.08.2016.

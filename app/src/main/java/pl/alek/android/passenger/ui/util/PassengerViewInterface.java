@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.util;
 
 /**
  * Created by Lenovo on 26.10.2016.

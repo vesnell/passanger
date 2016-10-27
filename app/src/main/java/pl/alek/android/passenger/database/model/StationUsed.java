@@ -10,6 +10,7 @@ import pl.alek.android.passenger.model.Station;
 
 public class StationUsed extends RealmObject {
 
+    private int order;
     @PrimaryKey
     private Integer id;
     private String name;
@@ -22,7 +23,7 @@ public class StationUsed extends RealmObject {
 
     public StationUsed() {}
 
-    public StationUsed(Station station) {
+    public StationUsed(Station station, int order) {
         this.id = station.ID;
         this.name = station.Nazwa;
         this.ObiektKod = station.ObiektKod;
@@ -31,6 +32,7 @@ public class StationUsed extends RealmObject {
         this.SzerokoscGeograficzna = station.SzerokoscGeograficzna;
         this.DlugoscGeograficzna = station.DlugoscGeograficzna;
         this.KrajKod = station.KrajKod;
+        this.order = order;
     }
 
     public static Station parseToStation(StationUsed stationUsed) {
@@ -44,6 +46,14 @@ public class StationUsed extends RealmObject {
         station.DlugoscGeograficzna = stationUsed.getDlugoscGeograficzna();
         station.KrajKod = stationUsed.getKrajKod();
         return station;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public Integer getId() {

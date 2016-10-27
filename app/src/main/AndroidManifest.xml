@@ -14,17 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="pl.alek.android.passenger.ui.SplashActivity"
+            android:name="pl.alek.android.passenger.ui.main.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="pl.alek.android.passenger.ui.MainActivity"/>
-        <activity android:name="pl.alek.android.passenger.ui.StationsListActivity"
+        <activity android:name="pl.alek.android.passenger.ui.main.MainActivity"/>
+        <activity android:name="pl.alek.android.passenger.ui.stationslist.StationsListActivity"
             android:launchMode="singleInstance"/>
-        <activity android:name="pl.alek.android.passenger.ui.StationInfoActivity"
+        <activity android:name="pl.alek.android.passenger.ui.stationinfo.StationInfoActivity"
             android:launchMode="singleInstance"/>
 
         <meta-data

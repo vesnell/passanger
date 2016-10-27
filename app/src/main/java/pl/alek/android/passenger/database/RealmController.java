@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import pl.alek.android.passenger.database.model.StationUsed;
 import pl.alek.android.passenger.model.Station;
 
@@ -62,10 +63,52 @@ public class RealmController {
         return new ArrayList<>(realm.where(StationUsed.class).findAll());
     }
 
-    public void saveStation(Station station) {
+    public void saveStation(final Station station) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                int order = getStationsUsed().size();
+                StationUsed stationUsed = new StationUsed(station, order);
+                realm.copyToRealm(stationUsed);
+            }
+        });
+    }
+
+    public void removeStation(final StationUsed stationUsed) {
+        final int order = stationUsed.getOrder();
         realm.beginTransaction();
-        realm.copyToRealm(new StationUsed(station));
+        RealmResults<StationUsed> rows = realm.where(StationUsed.class).equalTo("id", stationUsed.getId()).findAll();
+        rows.clear();
+        realm.commitTransaction();
+        updateStationOrders(order);
+    }
+
+    private void updateStationOrders(final int order) {
+        for (int i = order + 1; i <= getStationsUsed().size(); i++) {
+            updateStationOrder(i, i - 1);
+        }
+    }
+
+    private void updateStationOrder(int fromOrder, int toOrder) {
+        realm.beginTransaction();
+        StationUsed stationUsed = getStationUsedByOrder(fromOrder);
+        stationUsed.setOrder(toOrder);
+        realm.copyToRealmOrUpdate(stationUsed);
         realm.commitTransaction();
     }
 
+    private StationUsed getStationUsedByOrder(int order) {
+        return realm.where(StationUsed.class).equalTo("order", order).findFirst();
+    }
+
+    public void swapStations(int order1, int order2) {
+        realm.beginTransaction();
+        StationUsed stationUsed1 = getStationUsedByOrder(order1);
+        StationUsed stationUsed2 = getStationUsedByOrder(order2);
+        stationUsed1.setOrder(order2);
+        stationUsed2.setOrder(order1);
+        realm.copyToRealmOrUpdate(stationUsed1);
+        realm.copyToRealmOrUpdate(stationUsed2);
+        realm.commitTransaction();
+    }
 }

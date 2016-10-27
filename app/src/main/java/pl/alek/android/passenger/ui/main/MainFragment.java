@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.main;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,11 +33,17 @@ import io.realm.Realm;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.database.RealmController;
 import pl.alek.android.passenger.database.model.StationUsed;
+import pl.alek.android.passenger.database.util.StationUsedComparator;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.rest.manager.StationsManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
+import pl.alek.android.passenger.ui.util.PassengerViewInterface;
+import pl.alek.android.passenger.ui.stationinfo.StationInfoActivity;
+import pl.alek.android.passenger.ui.stationslist.StationsListActivity;
+import pl.alek.android.passenger.ui.util.StationsListAdapter;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
+import pl.alek.android.passenger.ui.util.SimpleItemTouchHelperCallback;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -67,6 +74,7 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
 
     private Realm mRealm;
     private StationsListAdapter mAdapter;
+    private ArrayList<StationUsed> stations = new ArrayList<StationUsed>();
 
     private class MyTextWatcher implements TextWatcher {
         @Override
@@ -138,10 +146,11 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
         rvStationUsedList.setHasFixedSize(true);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         rvStationUsedList.setLayoutManager(mLayoutManager);
-        ArrayList<StationUsed> stations = RealmController.getInstance().getStationsUsed();
-        setRvStationUsedListVisibility(stations);
         mAdapter = new StationsListAdapter(getContext(), stations);
         rvStationUsedList.setAdapter(mAdapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(rvStationUsedList);
         mAdapter.setOnItemClickListener(new StationsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -149,6 +158,19 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
                 openStationInfoActivity(StationUsed.parseToStation(station));
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateRvStationUsedList();
+    }
+
+    private void updateRvStationUsedList() {
+        ArrayList<StationUsed> stations = RealmController.getInstance().getStationsUsed();
+        Collections.sort(stations, new StationUsedComparator());
+        mAdapter.updateItems(stations);
+        setRvStationUsedListVisibility(stations);
     }
 
     private void setRvStationUsedListVisibility(ArrayList<StationUsed> stations) {

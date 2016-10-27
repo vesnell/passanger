@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;

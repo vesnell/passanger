@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.stationinfo;
 
 import android.content.Context;
 import android.content.DialogInterface;

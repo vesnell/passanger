@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

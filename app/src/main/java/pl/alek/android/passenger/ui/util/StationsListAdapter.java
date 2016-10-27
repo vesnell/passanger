@@ -1,4 +1,4 @@
-package pl.alek.android.passenger.ui;
+package pl.alek.android.passenger.ui.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,17 +9,20 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.database.RealmController;
 import pl.alek.android.passenger.database.model.StationUsed;
 import pl.alek.android.passenger.model.Station;
 
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.ViewHolder> {
+public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.ViewHolder>
+        implements ItemTouchHelperAdapter {
 
     private Context mContext;
     private ArrayList<?> mDataset = new ArrayList<>();
@@ -77,9 +80,11 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     private String getName(Object o) {
         String name = "";
         if (o instanceof Station) {
-            name = ((Station) o).Nazwa;
+            Station station = (Station) o;
+            name = station.Nazwa;
         } else if (o instanceof StationUsed) {
-            name = ((StationUsed) o).getName();
+            StationUsed stationUsed = (StationUsed) o;
+            name = stationUsed.getName();
         }
         return name;
     }
@@ -91,5 +96,34 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
 
     public ArrayList<?> getStationsList() {
         return mDataset;
+    }
+
+    public void updateItems(ArrayList<?> list) {
+        mDataset = list;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                RealmController.getInstance().swapStations(i, i + 1);
+                Collections.swap(mDataset, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                RealmController.getInstance().swapStations(i, i - 1);
+                Collections.swap(mDataset, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        StationUsed station = (StationUsed) mDataset.get(position);
+        RealmController.getInstance().removeStation(station);
+        mDataset.remove(position);
+        notifyItemRemoved(position);
     }
 }
