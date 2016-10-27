@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -26,7 +28,10 @@ import java.util.Collections;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.database.RealmController;
+import pl.alek.android.passenger.database.model.StationUsed;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.rest.manager.StationsManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
@@ -52,11 +57,16 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
     Button btnStationSearch;
     @Bind(R.id.progressBar)
     ProgressBar progressBar;
+    @Bind(R.id.rvStationUsedList)
+    RecyclerView rvStationUsedList;
 
     private Subscription subscription;
 
     private boolean isBtnEnabled = false;
     private boolean isWaitingForResponse = false;
+
+    private Realm mRealm;
+    private StationsListAdapter mAdapter;
 
     private class MyTextWatcher implements TextWatcher {
         @Override
@@ -101,12 +111,15 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
+        mRealm = RealmController.with(this).getRealm();
 
         setRetainInstance(true);
 
         setBtnBgColor(false);
         etStationSearch.addTextChangedListener(new MyTextWatcher());
         etStationSearch.setOnKeyListener(new PressOKOnKeyListener());
+
+        setRvStationUsedList();
 
         if (savedInstanceState != null) {
             isWaitingForResponse = savedInstanceState.getBoolean(IS_WAITING_FOR_RESP_KEY);
@@ -119,6 +132,31 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
         }
 
         return v;
+    }
+
+    private void setRvStationUsedList() {
+        rvStationUsedList.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvStationUsedList.setLayoutManager(mLayoutManager);
+        ArrayList<StationUsed> stations = RealmController.getInstance().getStationsUsed();
+        setRvStationUsedListVisibility(stations);
+        mAdapter = new StationsListAdapter(getContext(), stations);
+        rvStationUsedList.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(new StationsListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                StationUsed station = (StationUsed) mAdapter.getStationsList().get(position);
+                openStationInfoActivity(StationUsed.parseToStation(station));
+            }
+        });
+    }
+
+    private void setRvStationUsedListVisibility(ArrayList<StationUsed> stations) {
+        if (stations.size() > 0) {
+            rvStationUsedList.setVisibility(View.VISIBLE);
+        } else {
+            rvStationUsedList.setVisibility(View.GONE);
+        }
     }
 
     @OnClick(R.id.btnStationSearch)
@@ -194,6 +232,7 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
                     public void onNext(ArrayList<Station> stations) {
                         if (stations.size() == 1) {
                             Station station = stations.get(0);
+                            RealmController.getInstance().saveStation(station);
                             openStationInfoActivity(station);
                         } else if (stations.size() > 1) {
                             Collections.sort(stations);
@@ -276,5 +315,11 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 }

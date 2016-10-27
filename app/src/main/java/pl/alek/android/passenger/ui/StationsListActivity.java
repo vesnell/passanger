@@ -44,7 +44,7 @@ public class StationsListActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new StationsListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Station station = mAdapter.getStationsList().get(position);
+                Station station = (Station) mAdapter.getStationsList().get(position);
                 openStationInfoActivity(station);
             }
         });

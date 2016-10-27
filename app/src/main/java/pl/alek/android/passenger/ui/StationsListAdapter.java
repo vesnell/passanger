@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.database.model.StationUsed;
 import pl.alek.android.passenger.model.Station;
 
 /**
@@ -21,7 +22,7 @@ import pl.alek.android.passenger.model.Station;
 public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Station> mDataset = new ArrayList<Station>();
+    private ArrayList<?> mDataset = new ArrayList<>();
     OnItemClickListener mItemClickListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -50,7 +51,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         this.mItemClickListener = mItemClickListener;
     }
 
-    public StationsListAdapter(Context context, ArrayList<Station> myDataset) {
+    public StationsListAdapter(Context context, ArrayList<?> myDataset) {
         mDataset = myDataset;
         mContext = context;
     }
@@ -65,11 +66,22 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset.get(position).Nazwa);
+        Object o = mDataset.get(position);
+        holder.mTextView.setText(getName(o));
 
         int height = (int) mContext.getResources().getDimension(R.dimen.list_station_item_height);
         TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, height);
         holder.mTextView.setLayoutParams(params);
+    }
+
+    private String getName(Object o) {
+        String name = "";
+        if (o instanceof Station) {
+            name = ((Station) o).Nazwa;
+        } else if (o instanceof StationUsed) {
+            name = ((StationUsed) o).getName();
+        }
+        return name;
     }
 
     @Override
@@ -77,7 +89,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         return mDataset.size();
     }
 
-    public ArrayList<Station> getStationsList() {
+    public ArrayList<?> getStationsList() {
         return mDataset;
     }
 }
