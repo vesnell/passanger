@@ -191,7 +191,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        if (mDataset != null) {
+            return mDataset.size();
+        }
+        return 0;
     }
 
     public GeneralStationInfo getItems() {

@@ -66,6 +66,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
         rvStationInfoList.setHasFixedSize(true);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvStationInfoList.setLayoutManager(mLayoutManager);
+        updateGeneralInfoList(new GeneralStationInfo());
 
         station = (Station) getIntent().getSerializableExtra(Station.NAME);
         setTitle(station.Nazwa);
@@ -81,8 +82,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
         if (savedInstanceState != null) {
             GeneralStationInfo generalStationInfo = (GeneralStationInfo) savedInstanceState.getSerializable(GENERAL_INFO_KEY);
             if (generalStationInfo != null) {
-                mAdapter = new StationInfoAdapter(this, generalStationInfo);
-                rvStationInfoList.setAdapter(mAdapter);
+                updateGeneralInfoList(generalStationInfo);
                 setProgressBarVisible(false);
             } else {
                 prepareStationInfoView(station, false);
@@ -116,7 +116,11 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
                 .subscribe(new Observer<GeneralStationInfo>() {
                     @Override
                     public void onCompleted() {
-                        setProgressBarVisible(false);
+                        if (mAdapter.getItemCount() == 0) {
+                            setEmptyInfo();
+                        } else {
+                            setProgressBarVisible(false);
+                        }
                     }
 
                     @Override
@@ -130,8 +134,6 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
                         List<TrainInfo> scheduleList = generalStationInfo.Rozklad;
                         if (scheduleList.size() > 0) {
                             updateGeneralInfoList(generalStationInfo);
-                        } else {
-                            setEmptyInfo();
                         }
                     }
                 });
