@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import pl.alek.android.passenger.database.model.StationUsed;
 import pl.alek.android.passenger.model.Station;
@@ -67,9 +68,11 @@ public class RealmController {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                int order = getStationsUsed().size();
-                StationUsed stationUsed = new StationUsed(station, order);
-                realm.copyToRealm(stationUsed);
+                if (!isExists(station.ID)) {
+                    int order = getStationsUsed().size();
+                    StationUsed stationUsed = new StationUsed(station, order);
+                    realm.copyToRealm(stationUsed);
+                }
             }
         });
     }
@@ -111,4 +114,10 @@ public class RealmController {
         realm.copyToRealmOrUpdate(stationUsed2);
         realm.commitTransaction();
     }
+
+    private boolean isExists(int id){
+        RealmQuery<StationUsed> query = realm.where(StationUsed.class).equalTo("id", id);
+        return query.count() != 0;
+    }
+
 }

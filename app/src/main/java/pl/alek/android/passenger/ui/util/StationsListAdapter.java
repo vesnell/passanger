@@ -27,6 +27,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     private Context mContext;
     private ArrayList<?> mDataset = new ArrayList<>();
     OnItemClickListener mItemClickListener;
+    OnLastItemRemovedListener mLastItemRemovedListener;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @Bind(R.id.stationName)
@@ -50,8 +51,16 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         void onItemClick(View v, int position);
     }
 
+    public interface OnLastItemRemovedListener {
+        void onLastItemRemoved();
+    }
+
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
+    }
+
+    public void setOnLastItemRemovedListener(OnLastItemRemovedListener mLastItemRemovedListener) {
+        this.mLastItemRemovedListener = mLastItemRemovedListener;
     }
 
     public StationsListAdapter(Context context, ArrayList<?> myDataset) {
@@ -124,6 +133,9 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
         StationUsed station = (StationUsed) mDataset.get(position);
         RealmController.getInstance().removeStation(station);
         mDataset.remove(position);
+        if (mDataset.size() == 0) {
+            mLastItemRemovedListener.onLastItemRemoved();
+        }
         notifyItemRemoved(position);
     }
 }

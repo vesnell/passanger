@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.database.RealmController;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] menuList;
     private CharSequence mTitle;
     private ActionBarDrawerToggle mDrawerToggle;
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(realmConfiguration);
+        mRealm = RealmController.with(this).getRealm();
 
         setMenu();
         selectFragment(MAIN_FRAGMENT_NO);
@@ -143,5 +146,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 }

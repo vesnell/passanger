@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.database.RealmController;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.ui.stationinfo.StationInfoActivity;
 import pl.alek.android.passenger.ui.util.StationsListAdapter;
@@ -47,6 +48,7 @@ public class StationsListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, int position) {
                 Station station = (Station) mAdapter.getStationsList().get(position);
+                RealmController.getInstance().saveStation(station);
                 openStationInfoActivity(station);
             }
         });

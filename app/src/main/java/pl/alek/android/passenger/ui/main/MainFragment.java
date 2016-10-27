@@ -29,7 +29,6 @@ import java.util.Collections;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.database.RealmController;
 import pl.alek.android.passenger.database.model.StationUsed;
@@ -72,7 +71,7 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
     private boolean isBtnEnabled = false;
     private boolean isWaitingForResponse = false;
 
-    private Realm mRealm;
+
     private StationsListAdapter mAdapter;
     private ArrayList<StationUsed> stations = new ArrayList<StationUsed>();
 
@@ -119,7 +118,6 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
-        mRealm = RealmController.with(this).getRealm();
 
         setRetainInstance(true);
 
@@ -156,6 +154,12 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
             public void onItemClick(View v, int position) {
                 StationUsed station = (StationUsed) mAdapter.getStationsList().get(position);
                 openStationInfoActivity(StationUsed.parseToStation(station));
+            }
+        });
+        mAdapter.setOnLastItemRemovedListener(new StationsListAdapter.OnLastItemRemovedListener() {
+            @Override
+            public void onLastItemRemoved() {
+                rvStationUsedList.setVisibility(View.GONE);
             }
         });
     }
@@ -337,11 +341,5 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();
     }
 }
