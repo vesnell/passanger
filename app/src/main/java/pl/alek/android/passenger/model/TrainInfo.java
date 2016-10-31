@@ -3,12 +3,12 @@ package pl.alek.android.passenger.model;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
 
 import pl.alek.android.passenger.R;
+import pl.alek.android.passenger.ui.util.AndroidUtils;
 
 /**
  * Created by Lenovo on 23.08.2016.
@@ -63,8 +63,6 @@ public class TrainInfo implements Serializable {
     }
 
     public boolean isLeftStation() {
-        long curr = System.currentTimeMillis();
-
         String timeToCompare = null;
         if ((!isTrainCanceled()) && (!isTrainCanceledPartly()) && Opoznienie > 0) {
             timeToCompare = Godzina;
@@ -72,9 +70,8 @@ public class TrainInfo implements Serializable {
              timeToCompare = GodzinaPlanowa;
         }
         long tToCompare = getTimestamp(timeToCompare);
-        long fixCurr = curr + (2 * 3600 * 1000L);
 
-        return fixCurr > tToCompare;
+        return AndroidUtils.getCurrZoneTimeInMillis() > tToCompare;
     }
 
     public String getDelayedHourLabel(Context context) {
