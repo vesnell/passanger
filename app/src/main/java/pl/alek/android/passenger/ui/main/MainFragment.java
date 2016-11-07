@@ -36,7 +36,6 @@ import pl.alek.android.passenger.database.util.StationUsedComparator;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.rest.manager.StationsManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
-import pl.alek.android.passenger.ui.util.PassengerViewInterface;
 import pl.alek.android.passenger.ui.stationinfo.StationInfoActivity;
 import pl.alek.android.passenger.ui.stationslist.StationsListActivity;
 import pl.alek.android.passenger.ui.util.StationsListAdapter;
@@ -51,7 +50,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Lenovo on 25.08.2016.
  */
-public class MainFragment extends Fragment implements PassengerViewInterface {
+public class MainFragment extends Fragment implements PassengerReqVerToken.OnDownloadRequestTokenListener {
 
     private static final String TAG = "MainFragment";
     private static final int START_SEARCH_SIZE_TEXT = 3;
@@ -199,22 +198,21 @@ public class MainFragment extends Fragment implements PassengerViewInterface {
         }
     }
 
-    @Override
-    public void trySetReqVerToken() {
+    private void trySetReqVerToken() {
         isWaitingForResponse = true;
-        new PassengerReqVerToken(getActivity(), new PassengerReqVerToken.OnDownloadRequestTokenListener() {
-            @Override
-            public void onSuccess() {
-                String stationName = etStationSearch.getText().toString();
-                sendRequest(stationName);
-            }
+        new PassengerReqVerToken(getActivity(), this).setReqVerToken();
+    }
 
-            @Override
-            public void onError(String msg) {
-                cleanUI(msg);
-                Log.e(TAG, msg);
-            }
-        }).setReqVerToken();
+    @Override
+    public void onSuccess() {
+        String stationName = etStationSearch.getText().toString();
+        sendRequest(stationName);
+    }
+
+    @Override
+    public void onError(String msg) {
+        cleanUI(msg);
+        Log.e(TAG, msg);
     }
 
     private void prepareSubmitBtnAction() {

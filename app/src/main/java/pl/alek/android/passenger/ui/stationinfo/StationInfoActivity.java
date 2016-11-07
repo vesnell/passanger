@@ -26,7 +26,6 @@ import pl.alek.android.passenger.rest.manager.StationInfoManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
-import pl.alek.android.passenger.ui.util.PassengerViewInterface;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -35,7 +34,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by Lenovo on 22.08.2016.
  */
-public class StationInfoActivity extends AppCompatActivity implements PassengerViewInterface {
+public class StationInfoActivity extends AppCompatActivity implements PassengerReqVerToken.OnDownloadRequestTokenListener {
 
     private static final String TAG = "StationInfoActivity";
     private static final int MAX_SEND_REFRESH_REG_TOKEN_REQUESTS = 3;
@@ -161,7 +160,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
     private void refreshRequestParams() {
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
-            trySetReqVerToken();
+            new PassengerReqVerToken(this, this).setReqVerToken();
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);
@@ -179,22 +178,6 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    @Override
-    public void trySetReqVerToken() {
-        new PassengerReqVerToken(this, new PassengerReqVerToken.OnDownloadRequestTokenListener() {
-            @Override
-            public void onSuccess() {
-                refresh();
-            }
-
-            @Override
-            public void onError(String msg) {
-                cleanUI(msg);
-                Log.e(TAG, msg);
-            }
-        }).setReqVerToken();
     }
 
     private void cleanUI(String msg) {
@@ -218,6 +201,17 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerV
         progressBar.setVisibility(View.GONE);
         swipeContainer.setRefreshing(false);
         llNoResult.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onSuccess() {
+        refresh();
+    }
+
+    @Override
+    public void onError(String msg) {
+        cleanUI(msg);
+        Log.e(TAG, msg);
     }
 
     @Override
