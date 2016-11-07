@@ -1,6 +1,5 @@
 package pl.alek.android.passenger.online;
 
-import android.app.Activity;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -16,7 +15,6 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import pl.alek.android.passenger.online.PassengerInterface;
 import pl.alek.android.passenger.rest.RestAPI;
 
 /**
@@ -30,11 +28,18 @@ public class PassengerReqVerToken {
 
     public static String reqVerToken;
 
-    private Activity activity;
+    private static PassengerReqVerToken instance;
+
     private OnDownloadRequestTokenListener listener;
 
-    public PassengerReqVerToken(Activity activity, OnDownloadRequestTokenListener listener) {
-        this.activity = activity;
+    public static PassengerReqVerToken getInstance(OnDownloadRequestTokenListener listener) {
+        if (instance == null) {
+            return new PassengerReqVerToken(listener);
+        }
+        return instance;
+    }
+
+    private PassengerReqVerToken(OnDownloadRequestTokenListener listener) {
         this.listener = listener;
     }
 
@@ -82,22 +87,12 @@ public class PassengerReqVerToken {
     }
 
     private void onSuccessMsg() {
-        this.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listener.onSuccess();
-            }
-        });
+        listener.onSuccess();
     }
 
     private void onErrorMsg(String msg, final String locMsg) {
         Log.e(TAG, msg);
-        this.activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                listener.onError(locMsg);
-            }
-        });
+        listener.onError(locMsg);
     }
 
     public static Map<String, Object> getStationInfoParams(Integer stationID) {

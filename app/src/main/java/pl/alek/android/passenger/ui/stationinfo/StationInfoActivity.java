@@ -50,6 +50,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
     @Bind(R.id.llNoResult)
     LinearLayout llNoResult;
 
+    private PassengerReqVerToken passengerReqVerToken;
     private Station station;
     private StationInfoAdapter mAdapter;
     private int requestsIterator = 0;
@@ -62,6 +63,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
         setContentView(R.layout.activity_station_info);
         ButterKnife.bind(this);
 
+        passengerReqVerToken = PassengerReqVerToken.getInstance(this);
         rvStationInfoList.setHasFixedSize(true);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         rvStationInfoList.setLayoutManager(mLayoutManager);
@@ -160,7 +162,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
     private void refreshRequestParams() {
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
-            new PassengerReqVerToken(this, this).setReqVerToken();
+            passengerReqVerToken.setReqVerToken();
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);

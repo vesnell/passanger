@@ -69,7 +69,7 @@ public class MainFragment extends Fragment implements PassengerReqVerToken.OnDow
 
     private boolean isBtnEnabled = false;
     private boolean isWaitingForResponse = false;
-
+    private PassengerReqVerToken passengerReqVerToken;
 
     private StationsListAdapter mAdapter;
     private ArrayList<StationUsed> stations = new ArrayList<StationUsed>();
@@ -117,9 +117,9 @@ public class MainFragment extends Fragment implements PassengerReqVerToken.OnDow
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, v);
-
         setRetainInstance(true);
 
+        passengerReqVerToken = PassengerReqVerToken.getInstance(this);
         setBtnBgColor(false);
         etStationSearch.addTextChangedListener(new MyTextWatcher());
         etStationSearch.setOnKeyListener(new PressOKOnKeyListener());
@@ -200,7 +200,7 @@ public class MainFragment extends Fragment implements PassengerReqVerToken.OnDow
 
     private void trySetReqVerToken() {
         isWaitingForResponse = true;
-        new PassengerReqVerToken(getActivity(), this).setReqVerToken();
+        passengerReqVerToken.setReqVerToken();
     }
 
     @Override
