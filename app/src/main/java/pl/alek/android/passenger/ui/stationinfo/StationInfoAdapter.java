@@ -32,8 +32,9 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
     private List<TrainInfo> mDataset = new ArrayList<TrainInfo>();
     private List<String> mDelayCauses = new ArrayList<String>();
     private GeneralStationInfo generalStationInfo;
+    OnItemClickListener mItemClickListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Bind(R.id.llRailInfo)
         LinearLayout llRailInfo;
         @Bind(R.id.tvPlannedHour)
@@ -54,6 +55,14 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemClick(view, getAdapterPosition());
+            }
         }
     }
 
@@ -66,6 +75,14 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
         this.generalStationInfo = generalStationInfo;
         mDataset = generalStationInfo.Rozklad;
         mDelayCauses = generalStationInfo.Utrudnienia;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
     }
 
     @Override
@@ -106,9 +123,9 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
     private void setLeftItems(LinearLayout ll, boolean isLeftStation) {
         if (isLeftStation) {
-            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.lighterGrey));
+            ll.setBackgroundResource(R.drawable.item_info_bg_left);
         } else {
-            ll.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
+            ll.setBackgroundResource(R.drawable.item_info_bg_not_left);
         }
     }
 
@@ -199,6 +216,10 @@ public class StationInfoAdapter extends RecyclerView.Adapter<StationInfoAdapter.
 
     public GeneralStationInfo getItems() {
         return generalStationInfo;
+    }
+
+    public TrainInfo getTrainInfoItem(int position) {
+        return mDataset.get(position);
     }
 
     public void updateData(GeneralStationInfo generalStationInfo) {

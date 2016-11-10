@@ -146,7 +146,18 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
         } else {
             mAdapter = new StationInfoAdapter(StationInfoActivity.this, generalStationInfo);
             rvStationInfoList.setAdapter(mAdapter);
+            setItemListener();
         }
+    }
+
+    private void setItemListener() {
+        mAdapter.setOnItemClickListener(new StationInfoAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                TrainInfo traInfo = mAdapter.getTrainInfoItem(position);
+                Toast.makeText(StationInfoActivity.this, Integer.toString(traInfo.RozkladID), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void showAlertDialogNoInternetConn() {

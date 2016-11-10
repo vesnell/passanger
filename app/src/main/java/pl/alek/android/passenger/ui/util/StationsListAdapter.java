@@ -29,7 +29,7 @@ public class StationsListAdapter extends RecyclerView.Adapter<StationsListAdapte
     OnItemClickListener mItemClickListener;
     OnLastItemRemovedListener mLastItemRemovedListener;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @Bind(R.id.stationName)
         TextView mTextView;
 
