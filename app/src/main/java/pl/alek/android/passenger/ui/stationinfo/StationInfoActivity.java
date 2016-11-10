@@ -1,6 +1,7 @@
 package pl.alek.android.passenger.ui.stationinfo;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +25,7 @@ import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
 import pl.alek.android.passenger.rest.manager.StationInfoManager;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
+import pl.alek.android.passenger.ui.details.TrainDetailsActivity;
 import pl.alek.android.passenger.ui.util.AndroidUtils;
 
 import rx.Observer;
@@ -154,10 +156,16 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
         mAdapter.setOnItemClickListener(new StationInfoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                TrainInfo traInfo = mAdapter.getTrainInfoItem(position);
-                Toast.makeText(StationInfoActivity.this, Integer.toString(traInfo.RozkladID), Toast.LENGTH_LONG).show();
+                TrainInfo trainInfo = mAdapter.getTrainInfoItem(position);
+                openTrainDetailsActivity(trainInfo);
             }
         });
+    }
+
+    private void openTrainDetailsActivity(TrainInfo trainInfo) {
+        Intent i = new Intent(StationInfoActivity.this, TrainDetailsActivity.class);
+        i.putExtra(TrainInfo.TAG, trainInfo);
+        startActivity(i);
     }
 
     private void showAlertDialogNoInternetConn() {

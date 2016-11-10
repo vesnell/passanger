@@ -23,9 +23,11 @@
         </activity>
         <activity android:name="pl.alek.android.passenger.ui.main.MainActivity"/>
         <activity android:name="pl.alek.android.passenger.ui.stationslist.StationsListActivity"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleTask"/>
         <activity android:name="pl.alek.android.passenger.ui.stationinfo.StationInfoActivity"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleTask"/>
+        <activity android:name="pl.alek.android.passenger.ui.details.TrainDetailsActivity"
+            android:launchMode="singleTask"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -15,6 +15,8 @@ import pl.alek.android.passenger.ui.util.AndroidUtils;
  */
 public class TrainInfo implements Serializable {
 
+    public static final String TAG = "TrainInfo";
+
     private static final String DATE_FORMAT = "HH:mm";
     private static final String TIMEZONE_UTC = "UTC";
     private static final String ARROW_UNICODE = "\u21B3";
@@ -114,5 +116,9 @@ public class TrainInfo implements Serializable {
 
     public boolean isTrainCanceledPartly() {
         return Opoznienie == Integer.MAX_VALUE - 1;
+    }
+
+    public String getDetailsTitle() {
+        return StacjaPoczatkowaNazwa + " - " + StacjaKoncowaNazwa;
     }
 }
