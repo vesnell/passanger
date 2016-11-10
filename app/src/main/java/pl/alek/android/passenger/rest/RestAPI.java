@@ -14,8 +14,11 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pl.alek.android.passenger.App;
+import pl.alek.android.passenger.model.Details;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.model.TrainInfo;
+import pl.alek.android.passenger.rest.api.DetailsAPI;
 import pl.alek.android.passenger.rest.api.StationInfoAPI;
 import pl.alek.android.passenger.rest.api.StationsAPI;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
@@ -83,4 +86,8 @@ public class RestAPI {
         return ((StationInfoAPI) api).loadData(params);
     }
 
+    public Call<Details> getDetails(TrainInfo trainInfo) {
+        Map<String, Object> params = PassengerReqVerToken.getTrainDeatilsInfoParams(trainInfo);
+        return ((DetailsAPI) api).loadData(params);
+    }
 }

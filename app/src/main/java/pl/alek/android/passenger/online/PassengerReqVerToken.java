@@ -15,6 +15,7 @@ import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.rest.RestAPI;
 
 /**
@@ -98,6 +99,19 @@ public class PassengerReqVerToken {
     public static Map<String, Object> getStationInfoParams(Integer stationID) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put(PassengerInterface.STATION_ID, stationID);
+        params.put(PassengerInterface.DEPARTURES, true);
+        params.put(PassengerInterface.AVAILABLE_KH, PassengerInterface.AVAILABLE_KH_VALUE);
+        params.put(PassengerInterface.REQ_VER_TOK, reqVerToken);
+        return params;
+    }
+
+    public static Map<String, Object> getTrainDeatilsInfoParams(TrainInfo trainInfo) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put(PassengerInterface.SCHEDULE_ID, trainInfo.RozkladID);
+        params.put(PassengerInterface.SKRJID_ORDER, trainInfo.ZamowienieSKRJID);
+        params.put(PassengerInterface.PLANNED_DATE, trainInfo.DataPlanowa);
+        params.put(PassengerInterface.START_STATION_ID, trainInfo.StacjaPoczatkowaID);
+        params.put(PassengerInterface.END_STATION_ID, trainInfo.StacjaKoncowaID);
         params.put(PassengerInterface.DEPARTURES, true);
         params.put(PassengerInterface.AVAILABLE_KH, PassengerInterface.AVAILABLE_KH_VALUE);
         params.put(PassengerInterface.REQ_VER_TOK, reqVerToken);
