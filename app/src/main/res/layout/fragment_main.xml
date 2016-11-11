@@ -36,6 +36,7 @@
                 android:layout_weight="3"
                 android:hint="@string/hint_station_name"
                 android:maxLines="1"
+                android:inputType="text"
                 android:imeOptions="actionSearch"/>
             <Button
                 style="@style/AppCompat.Button.Flat.Common"
