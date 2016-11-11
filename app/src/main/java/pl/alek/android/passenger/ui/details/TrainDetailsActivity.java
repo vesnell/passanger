@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Details;
+import pl.alek.android.passenger.model.Train;
 import pl.alek.android.passenger.model.TrainDetails;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
@@ -98,7 +99,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                 .subscribe(new Observer<Details>() {
                     @Override
                     public void onCompleted() {
-                        setMainDetailsVisible(true);
+                        //setListOfStations
                     }
 
                     @Override
@@ -109,7 +110,15 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
                     @Override
                     public void onNext(Details details) {
-                        Toast.makeText(TrainDetailsActivity.this, Integer.toString(details.Dane.get(0).CzasPodrozy.Minutes), Toast.LENGTH_LONG).show();
+                        setMainDetailsVisible(true);
+                        TrainDetails trainDetails = details.Dane.get(0);
+                        String timeTravel = trainDetails.CzasPodrozy.getTimeTravel();
+                        tvTimeTravel.setText(timeTravel);
+                        Train train = trainDetails.Pociagi.get(0);
+                        tvStartStation.setText(train.RelacjaPoczatkowa);
+                        tvEndStation.setText(train.getEndStation());
+                        tvPlatformTrack.setText(train.getStartPlatformTrack());
+                        tvTrainNo.setText(train.getCarrier());
                     }
                 });
     }

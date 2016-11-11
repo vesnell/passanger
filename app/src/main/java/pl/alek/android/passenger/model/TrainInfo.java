@@ -19,7 +19,7 @@ public class TrainInfo implements Serializable {
 
     private static final String DATE_FORMAT = "HH:mm";
     private static final String TIMEZONE_UTC = "UTC";
-    private static final String ARROW_UNICODE = "\u21B3";
+    public static final String ARROW_UNICODE = "\u21B3";
 
     public Integer RozkladID;
     public String ZamowienieSKRJID;

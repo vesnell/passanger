@@ -16,4 +16,15 @@ public class TimeTravel {
     public Integer TotalMilliseconds;
     public Double TotalMinutes;
     public Double TotalSeconds;
+
+    public String getTimeTravel() {
+        String time = "";
+        if (Days > 0) {
+            time += Integer.toString(Days) + "d ";
+        }
+        if (Hours > 0 || Days > 0) {
+            time += Integer.toString(Hours) + "h ";
+        }
+        return time += Integer.toString(Minutes) + "min";
+    }
 }

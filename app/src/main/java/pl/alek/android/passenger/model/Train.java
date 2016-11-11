@@ -26,7 +26,7 @@ public class Train {
     public String RelacjaKoncowa;
     public String Numer;
     public String Nazwa;
-    public String PrzewznikSkrot;
+    public String PrzewoznikSkrot;
     public String KategoriaHandlowaSymbol;
     public String KategoriaSzybkosciKod;
     public List<String> KategorieHandloweNaTrasie;
@@ -54,4 +54,20 @@ public class Train {
     public Integer CzasOczekiwania;
     public Object NrWagonow;
     public Object NrWagonowBezposrednich;
+
+    public String getEndStation() {
+        return TrainInfo.ARROW_UNICODE + RelacjaKoncowa;
+    }
+
+    public String getStartPlatformTrack() {
+        if (TorPoczatkowy != null) {
+            return PeronPoczatkowy + " / " + TorPoczatkowy;
+        } else {
+            return PeronPoczatkowy;
+        }
+    }
+
+    public String getCarrier() {
+        return PrzewoznikSkrot + ":" + Numer;
+    }
 }
