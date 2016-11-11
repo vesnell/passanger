@@ -1,12 +1,13 @@
 package pl.alek.android.passenger.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Lenovo on 10.11.2016.
  */
 
-public class Train {
+public class Train implements Serializable {
     public String KategoriaHandlowaNazwa;
     public String PrzewoznikNazwa;
     public String KategoriaSzybkosciNazwa;
@@ -56,7 +57,7 @@ public class Train {
     public Object NrWagonowBezposrednich;
 
     public String getEndStation() {
-        return TrainInfo.ARROW_UNICODE + RelacjaKoncowa;
+        return TrainInfo.ARROW_UNICODE + " " + RelacjaKoncowa;
     }
 
     public String getStartPlatformTrack() {

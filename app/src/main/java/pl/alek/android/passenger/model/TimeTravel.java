@@ -1,10 +1,12 @@
 package pl.alek.android.passenger.model;
 
+import java.io.Serializable;
+
 /**
  * Created by Lenovo on 10.11.2016.
  */
 
-public class TimeTravel {
+public class TimeTravel implements Serializable {
     public Long Ticks;
     public Integer Days;
     public Integer Hours;

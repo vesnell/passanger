@@ -1,19 +1,18 @@
 package pl.alek.android.passenger.ui.details;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Details;
-import pl.alek.android.passenger.model.Train;
 import pl.alek.android.passenger.model.TrainDetails;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
@@ -31,18 +30,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private static final String TAG = "TrainDetailsActivity";
 
-    @Bind(R.id.llMainDetails)
-    LinearLayout llMainDetails;
-    @Bind(R.id.tvTimeTravel)
-    TextView tvTimeTravel;
-    @Bind(R.id.tvStartStation)
-    TextView tvStartStation;
-    @Bind(R.id.tvEndStation)
-    TextView tvEndStation;
-    @Bind(R.id.tvPlatformTrack)
-    TextView tvPlatformTrack;
-    @Bind(R.id.tvTrainNo)
-    TextView tvTrainNo;
+    @Bind(R.id.mainDetailsContainer)
+    LinearLayout mainDetailsContainer;
     @Bind(R.id.progressBarMainDetails)
     ProgressBar progressBarMainDetails;
 
@@ -72,10 +61,10 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private void setMainDetailsVisible(boolean b) {
         if (b) {
-            llMainDetails.setVisibility(View.VISIBLE);
+            mainDetailsContainer.setVisibility(View.VISIBLE);
             progressBarMainDetails.setVisibility(View.GONE);
         } else {
-            llMainDetails.setVisibility(View.GONE);
+            mainDetailsContainer.setVisibility(View.GONE);
             progressBarMainDetails.setVisibility(View.VISIBLE);
         }
     }
@@ -112,15 +101,16 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                     @Override
                     public void onNext(Details details) {
                         TrainDetails trainDetails = details.Dane.get(0);
-                        String timeTravel = trainDetails.CzasPodrozy.getTimeTravel();
-                        tvTimeTravel.setText(timeTravel);
-                        Train train = trainDetails.Pociagi.get(0);
-                        tvStartStation.setText(train.RelacjaPoczatkowa);
-                        tvEndStation.setText(train.getEndStation());
-                        tvPlatformTrack.setText(train.getStartPlatformTrack());
-                        tvTrainNo.setText(train.getCarrier());
+                        inflateMainDetailsFragment(trainDetails);
                     }
                 });
+    }
+
+    private void inflateMainDetailsFragment(TrainDetails trainDetails) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        MainDetailsFragment mainDetailsFragment = MainDetailsFragment.createInstance(trainDetails);
+        fragmentTransaction.add(mainDetailsContainer.getId(), mainDetailsFragment);
+        fragmentTransaction.commit();
     }
 
     private void cleanUI(String msg) {

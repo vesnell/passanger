@@ -1,12 +1,16 @@
 package pl.alek.android.passenger.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Lenovo on 10.11.2016.
  */
 
-public class TrainDetails {
+public class TrainDetails implements Serializable {
+
+    public static final String TAG = "TrainDetails";
+
     public Boolean PolaczeniePierwotne;
     public Integer Identyfikator;
     public Integer RozkladID;
