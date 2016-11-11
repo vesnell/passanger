@@ -99,6 +99,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                 .subscribe(new Observer<Details>() {
                     @Override
                     public void onCompleted() {
+                        setMainDetailsVisible(true);
                         //setListOfStations
                     }
 
@@ -110,7 +111,6 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
                     @Override
                     public void onNext(Details details) {
-                        setMainDetailsVisible(true);
                         TrainDetails trainDetails = details.Dane.get(0);
                         String timeTravel = trainDetails.CzasPodrozy.getTimeTravel();
                         tvTimeTravel.setText(timeTravel);

@@ -8,6 +8,6 @@ import java.util.List;
 
 public class Details {
     public List<TrainDetails> Dane;
-    public List<String> BrakujaceIkonyKH;
+    public List<Object> BrakujaceIkonyKH;
     public String BrakujaceIkonyU;
 }

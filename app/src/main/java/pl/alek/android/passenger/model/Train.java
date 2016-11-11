@@ -16,7 +16,7 @@ public class Train {
     public Integer RelacjaPoczatkowaNumerNaTrasie;
     public Integer RelacjaKoncowaID;
     public Integer RelacjaKoncowaNumerNaTrasie;
-    public String UtrudnieniaKomunikatyUporzadkowane;
+    public Impediment UtrudnieniaKomunikatyUporzadkowane;
     public String NumerKupBilet;
     public Integer RozkladID;
     public Integer GrupaSKRJID;
