@@ -2,38 +2,38 @@ package pl.alek.android.passenger.rest.manager;
 
 import java.io.IOException;
 
-import pl.alek.android.passenger.model.Details;
-import pl.alek.android.passenger.model.TrainInfo;
+import pl.alek.android.passenger.model.Tracks;
+import pl.alek.android.passenger.model.Train;
 import pl.alek.android.passenger.rest.RestAPI;
-import pl.alek.android.passenger.rest.api.DetailsAPI;
+import pl.alek.android.passenger.rest.api.TrackAPI;
 import retrofit2.Call;
 import retrofit2.Response;
 import rx.Observable;
+import rx.Observable.OnSubscribe;
 import rx.Subscriber;
 
 /**
- * Created by Lenovo on 10.11.2016.
+ * Created by Lenovo on 25.10.2016.
  */
 
-public class DetailsManager {
-    public Details details;
+public class TracksManager {
+    private static RestAPI api = new RestAPI(TrackAPI.class);
 
-    private static RestAPI api = new RestAPI(DetailsAPI.class);
+    public Observable<Tracks> getTracks(final Train train) {
+        return Observable.create( new OnSubscribe<Tracks>() {
 
-    public Observable<Details> getDetails(final TrainInfo trainInfo) {
-        return Observable.create(new Observable.OnSubscribe<Details>() {
             @Override
-            public void call(Subscriber<? super Details> subscriber) {
-                Call<Details> callResponse = api.getDetails(trainInfo);
-                Response<Details> response = null;
+            public void call(Subscriber<? super Tracks> subscriber) {
+                Call<Tracks> callResponse = api.getTracks(train);
+                Response<Tracks> response = null;
                 try {
                     response = callResponse.execute();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (response != null && response.isSuccessful()) {
-                    details = response.body();
-                    subscriber.onNext(details);
+                    Tracks tracks = response.body();
+                    subscriber.onNext(tracks);
                     subscriber.onCompleted();
                 } else {
                     if (response != null) {
@@ -45,5 +45,4 @@ public class DetailsManager {
             }
         });
     }
-
 }

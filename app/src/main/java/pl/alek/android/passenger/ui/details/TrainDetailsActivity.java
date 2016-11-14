@@ -13,10 +13,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Details;
+import pl.alek.android.passenger.model.Tracks;
+import pl.alek.android.passenger.model.Train;
 import pl.alek.android.passenger.model.TrainDetails;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
 import pl.alek.android.passenger.rest.manager.DetailsManager;
+import pl.alek.android.passenger.rest.manager.TracksManager;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -81,7 +84,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
     }
 
     private void sendRequest() {
-        DetailsManager detailsManager = new DetailsManager();
+        final DetailsManager detailsManager = new DetailsManager();
         subscription = detailsManager.getDetails(trainInfo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -89,7 +92,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                     @Override
                     public void onCompleted() {
                         setMainDetailsVisible(true);
-                        //setListOfStations
+                        getTracks(detailsManager.details.Dane.get(0).Pociagi.get(0));
                     }
 
                     @Override
@@ -102,6 +105,30 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                     public void onNext(Details details) {
                         TrainDetails trainDetails = details.Dane.get(0);
                         inflateMainDetailsFragment(trainDetails);
+                    }
+                });
+    }
+
+    private void getTracks(Train train) {
+        TracksManager tracksManager = new TracksManager();
+        subscription = tracksManager.getTracks(train)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Tracks>() {
+                    @Override
+                    public void onCompleted() {
+                        //setTracksUI
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        //cleanTracks(e.getLocalizedMessage());
+                        Log.e(TAG, e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Tracks tracks) {
+                        Toast.makeText(TrainDetailsActivity.this, tracks.res.get(0).StacjaNazwa, Toast.LENGTH_LONG).show();
                     }
                 });
     }

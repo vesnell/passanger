@@ -10,6 +10,7 @@ public interface PassengerInterface {
     String INPUT_TEXT = "wprowadzonyTekst";
     String DOWNLOAD = "Pobierz";
     String DOWNLOAD_TRAIN_DETAILS = "PobierzSzczegolyPociagu";
+    String DOWNLOAD_TRACK = "PobierzTrase";
     String REQ_VER_TOK = "__RequestVerificationToken";
 
     String STATION_ID = "stacjaID";
@@ -26,4 +27,7 @@ public interface PassengerInterface {
     String PLANNED_DATE = "DataPlanowa";
     String START_STATION_ID = "StacjaPoczatkowaID";
     String END_STATION_ID = "StacjaKoncowaID";
+
+    String CRITERIA = "kryteria";
+    String AVAILABLE_U = "dostepneU";
 }

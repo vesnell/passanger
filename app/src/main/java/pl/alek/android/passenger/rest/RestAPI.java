@@ -17,11 +17,15 @@ import pl.alek.android.passenger.App;
 import pl.alek.android.passenger.model.Details;
 import pl.alek.android.passenger.model.GeneralStationInfo;
 import pl.alek.android.passenger.model.Station;
+import pl.alek.android.passenger.model.Tracks;
+import pl.alek.android.passenger.model.Train;
+import pl.alek.android.passenger.model.TrainForParams;
 import pl.alek.android.passenger.model.TrainInfo;
 import pl.alek.android.passenger.rest.api.DetailsAPI;
 import pl.alek.android.passenger.rest.api.StationInfoAPI;
 import pl.alek.android.passenger.rest.api.StationsAPI;
 import pl.alek.android.passenger.online.PassengerReqVerToken;
+import pl.alek.android.passenger.rest.api.TrackAPI;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -89,5 +93,10 @@ public class RestAPI {
     public Call<Details> getDetails(TrainInfo trainInfo) {
         Map<String, Object> params = PassengerReqVerToken.getTrainDeatilsInfoParams(trainInfo);
         return ((DetailsAPI) api).loadData(params);
+    }
+
+    public Call<Tracks> getTracks(Train train) {
+        TrainForParams trainForParams = new TrainForParams(train);
+        return ((TrackAPI) api).loadData(trainForParams.getQuery());
     }
 }
