@@ -7,6 +7,10 @@ import java.util.List;
  */
 
 public class Track {
+
+    public static final String TAG = "Track";
+    public static final String TRACK_LIST = "trackList";
+
     public String RozkladID;
     public Integer GrupaSKRJID;
     public Integer ZamowienieSKRJID;

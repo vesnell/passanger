@@ -1,6 +1,7 @@
 package pl.alek.android.passenger.ui.details;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,10 +10,13 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Details;
+import pl.alek.android.passenger.model.Track;
 import pl.alek.android.passenger.model.Tracks;
 import pl.alek.android.passenger.model.Train;
 import pl.alek.android.passenger.model.TrainDetails;
@@ -35,6 +39,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     @Bind(R.id.mainDetailsContainer)
     LinearLayout mainDetailsContainer;
+    @Bind(R.id.trackContainer)
+    LinearLayout trackContainer;
     @Bind(R.id.progressBarMainDetails)
     ProgressBar progressBarMainDetails;
 
@@ -59,15 +65,25 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
     }
 
     private void initUI() {
+        trackContainer.setVisibility(View.GONE);
         setMainDetailsVisible(false);
+        setTrackDetailsVisible(false);
     }
 
     private void setMainDetailsVisible(boolean b) {
+        setContainerVisible(mainDetailsContainer, b);
+    }
+
+    private void setTrackDetailsVisible(boolean b) {
+        setContainerVisible(trackContainer, b);
+    }
+
+    private void setContainerVisible(LinearLayout container, boolean b) {
         if (b) {
-            mainDetailsContainer.setVisibility(View.VISIBLE);
+            container.setVisibility(View.VISIBLE);
             progressBarMainDetails.setVisibility(View.GONE);
         } else {
-            mainDetailsContainer.setVisibility(View.GONE);
+            container.setVisibility(View.GONE);
             progressBarMainDetails.setVisibility(View.VISIBLE);
         }
     }
@@ -110,6 +126,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
     }
 
     private void getTracks(Train train) {
+        setTrackDetailsVisible(false);
         TracksManager tracksManager = new TracksManager();
         subscription = tracksManager.getTracks(train)
                 .subscribeOn(Schedulers.io())
@@ -117,26 +134,34 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
                 .subscribe(new Observer<Tracks>() {
                     @Override
                     public void onCompleted() {
-                        //setTracksUI
+                        setTrackDetailsVisible(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        //cleanTracks(e.getLocalizedMessage());
+                        cleanUI(e.getLocalizedMessage());
                         Log.e(TAG, e.getMessage());
                     }
 
                     @Override
                     public void onNext(Tracks tracks) {
-                        Toast.makeText(TrainDetailsActivity.this, tracks.res.get(0).StacjaNazwa, Toast.LENGTH_LONG).show();
+                        ArrayList<Track> trackList = tracks.res;
+                        inflateTrackFragment(trackList);
                     }
                 });
     }
 
     private void inflateMainDetailsFragment(TrainDetails trainDetails) {
+        inflateFragment(mainDetailsContainer, MainDetailsFragment.createInstance(trainDetails));
+    }
+
+    private void inflateTrackFragment(ArrayList<Track> trackList) {
+        inflateFragment(trackContainer, TracksFragment.createInstance(trackList));
+    }
+
+    private void inflateFragment(LinearLayout container, Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        MainDetailsFragment mainDetailsFragment = MainDetailsFragment.createInstance(trainDetails);
-        fragmentTransaction.add(mainDetailsContainer.getId(), mainDetailsFragment);
+        fragmentTransaction.add(container.getId(), fragment);
         fragmentTransaction.commit();
     }
 
