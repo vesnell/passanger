@@ -2,13 +2,15 @@ package pl.alek.android.passenger.ui.details;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
 import pl.alek.android.passenger.model.Track;
@@ -18,6 +20,11 @@ import pl.alek.android.passenger.model.Track;
  */
 
 public class TracksFragment extends Fragment {
+
+    @Bind(R.id.rvTracks)
+    RecyclerView rvTracks;
+
+    private TrackAdapter mAdapter;
 
     public static TracksFragment createInstance(ArrayList<Track> tracks) {
         TracksFragment fragment = new TracksFragment();
@@ -33,8 +40,15 @@ public class TracksFragment extends Fragment {
         ButterKnife.bind(this, v);
         setRetainInstance(true);
 
+        rvTracks.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        rvTracks.setLayoutManager(mLayoutManager);
+
         ArrayList<Track> tracks = (ArrayList<Track>) getArguments().getSerializable(Track.TRACK_LIST);
-        Toast.makeText(getContext(), tracks.get(0).StacjaNazwa, Toast.LENGTH_LONG).show();
+
+        mAdapter = new TrackAdapter(getContext(), tracks);
+        rvTracks.setAdapter(mAdapter);
+
         return v;
     }
 }

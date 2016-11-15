@@ -1,12 +1,15 @@
 package pl.alek.android.passenger.model;
 
+import java.io.Serializable;
 import java.util.List;
+
+import pl.alek.android.passenger.model.util.ModelUtils;
 
 /**
  * Created by Lenovo on 14.11.2016.
  */
 
-public class Track {
+public class Track implements Serializable {
 
     public static final String TAG = "Track";
     public static final String TRACK_LIST = "trackList";
@@ -48,4 +51,62 @@ public class Track {
     public String OdjazdStr;
     public String OdjazdRzeczStr;
     public List<Icon> ico;
+
+    public boolean isLeftStation() {
+        return Wykonana;
+    }
+
+    private boolean isDepartureDelay() {
+        return OdjazdOpoznienie != null;
+    }
+
+    private boolean isArrivalDelay() {
+        return PrzyjazdOpoznienie != null;
+    }
+
+    public boolean isStationCanceled() {
+        return Odwolana;
+    }
+
+    private Integer getDepartureDelay() {
+        if (isDepartureDelay()) {
+            return OdjazdOpoznienie.Minutes;
+        }
+        return null;
+    }
+
+    private Integer getArrivalDelay() {
+        if (isArrivalDelay()) {
+            return PrzyjazdOpoznienie.Minutes;
+        }
+        return null;
+    }
+
+    public String getDepartureTime() {
+        if (Odjazd != null) {
+            return ModelUtils.getHourInString(Odjazd);
+        }
+        return null;
+    }
+
+    public String getArrivalTime() {
+        if (Przyjazd != null) {
+            return ModelUtils.getHourInString(Przyjazd);
+        }
+        return null;
+    }
+
+    public String getDepartureRealTime() {
+        if (isDepartureDelay() && getDepartureDelay() != null) {
+            return ModelUtils.getHourInString(OdjazdRzecz) + "(+" + Integer.toString(getDepartureDelay()) + ")";
+        }
+        return null;
+    }
+
+    public String getArrivalRealTime() {
+        if (isArrivalDelay() && getArrivalDelay() != null) {
+            return ModelUtils.getHourInString(PrzyjazdRzecz) + "(+" + Integer.toString(getArrivalDelay()) + ")";
+        }
+        return null;
+    }
 }

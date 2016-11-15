@@ -3,6 +3,8 @@ package pl.alek.android.passenger.model;
 import java.io.Serializable;
 import java.util.List;
 
+import pl.alek.android.passenger.model.util.ModelUtils;
+
 /**
  * Created by Lenovo on 10.11.2016.
  */
@@ -57,7 +59,7 @@ public class Train implements Serializable {
     public Object NrWagonowBezposrednich;
 
     public String getEndStation() {
-        return TrainInfo.ARROW_UNICODE + " " + RelacjaKoncowa;
+        return ModelUtils.ARROW_UNICODE + " " + RelacjaKoncowa;
     }
 
     public String getStartPlatformTrack() {

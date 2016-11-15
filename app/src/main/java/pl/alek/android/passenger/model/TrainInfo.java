@@ -3,12 +3,10 @@ package pl.alek.android.passenger.model;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 import pl.alek.android.passenger.R;
-import pl.alek.android.passenger.ui.util.AndroidUtils;
+import pl.alek.android.passenger.model.util.ModelUtils;
 
 /**
  * Created by Lenovo on 23.08.2016.
@@ -16,10 +14,6 @@ import pl.alek.android.passenger.ui.util.AndroidUtils;
 public class TrainInfo implements Serializable {
 
     public static final String TAG = "TrainInfo";
-
-    private static final String DATE_FORMAT = "HH:mm";
-    private static final String TIMEZONE_UTC = "UTC";
-    public static final String ARROW_UNICODE = "\u21B3";
 
     public Integer RozkladID;
     public String ZamowienieSKRJID;
@@ -51,19 +45,6 @@ public class TrainInfo implements Serializable {
     public String StacjePosrednie;
     public boolean KomunikacjaZastepcza;
 
-    private String getHourInString(String godzina) {
-        long timestamp = getTimestamp(godzina);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(TIMEZONE_UTC));
-        String t = dateFormat.format(timestamp);
-        return t;
-    }
-
-    private long getTimestamp(String portalDate) {
-        String time = portalDate.split("\\(|\\)")[1];
-        return Long.parseLong(time);
-    }
-
     public boolean isLeftStation() {
         String timeToCompare = null;
         if ((!isTrainCanceled()) && (!isTrainCanceledPartly()) && Opoznienie > 0) {
@@ -71,9 +52,9 @@ public class TrainInfo implements Serializable {
         } else {
              timeToCompare = GodzinaPlanowa;
         }
-        long tToCompare = getTimestamp(timeToCompare);
+        long tToCompare = ModelUtils.getTimestamp(timeToCompare);
 
-        return AndroidUtils.getCurrZoneTimeInMillis() > tToCompare;
+        return ModelUtils.getCurrZoneTimeInMillis() > tToCompare;
     }
 
     public String getDelayedHourLabel(Context context) {
@@ -83,7 +64,7 @@ public class TrainInfo implements Serializable {
             } else if (isTrainCanceledPartly()) {
                 return context.getResources().getString(R.string.partly_canceled);
             } else {
-                return getHourInString(Godzina) + " (+" + Opoznienie + ")";
+                return ModelUtils.getHourInString(Godzina) + " (+" + Opoznienie + ")";
             }
         } else {
             return null;
@@ -91,7 +72,7 @@ public class TrainInfo implements Serializable {
     }
 
     public String getPlannedHourLabel() {
-        return getHourInString(GodzinaPlanowa);
+        return ModelUtils.getHourInString(GodzinaPlanowa);
     }
 
     public String getPlatformTrack() {
@@ -103,7 +84,7 @@ public class TrainInfo implements Serializable {
     }
 
     public String getEndStation() {
-        return ARROW_UNICODE + " " + RelacjaKoncowaNazwa;
+        return ModelUtils.ARROW_UNICODE + " " + RelacjaKoncowaNazwa;
     }
 
     public String getCarrier() {

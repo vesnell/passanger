@@ -7,8 +7,6 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import java.util.Calendar;
-
 /**
  * Created by Lenovo on 24.08.2016.
  */
@@ -26,12 +24,5 @@ public class AndroidUtils {
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public static long getCurrZoneTimeInMillis() {
-        Calendar rightNow = Calendar.getInstance();
-        long offset = rightNow.get(Calendar.ZONE_OFFSET) +
-                rightNow.get(Calendar.DST_OFFSET);
-        return rightNow.getTimeInMillis() + offset;
     }
 }
