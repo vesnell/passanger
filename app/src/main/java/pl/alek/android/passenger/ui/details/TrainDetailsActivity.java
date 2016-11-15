@@ -161,7 +161,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private void inflateFragment(LinearLayout container, Fragment fragment) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(container.getId(), fragment);
+        fragmentTransaction.replace(container.getId(), fragment);
         fragmentTransaction.commit();
     }
 
