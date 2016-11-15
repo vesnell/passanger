@@ -37,6 +37,9 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private static final String TAG = "TrainDetailsActivity";
 
+    private static final String TRACK_LIST_KEY = "trackListKey";
+    private static final String TRAIN_DETAILS_KEY = "trainDetailsKey";
+
     @Bind(R.id.mainDetailsContainer)
     LinearLayout mainDetailsContainer;
     @Bind(R.id.trackContainer)
@@ -48,6 +51,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private TrainInfo trainInfo;
     private PassengerReqVerToken passengerReqVerToken;
+    private TrainDetails trainDetails;
+    private ArrayList<Track> trackList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +60,20 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
-        Bundle bundle = getIntent().getExtras();
-        trainInfo = (TrainInfo) bundle.getSerializable(TrainInfo.TAG);
-        setTitle(trainInfo.getDetailsTitle());
-        initUI();
+        if (savedInstanceState != null) {
+            trainDetails = (TrainDetails) savedInstanceState.getSerializable(TRAIN_DETAILS_KEY);
+            trackList = (ArrayList<Track>) savedInstanceState.getSerializable(TRACK_LIST_KEY);
+            inflateMainDetailsFragment(trainDetails);
+            inflateTrackFragment(trackList);
+        } else {
+            Bundle bundle = getIntent().getExtras();
+            trainInfo = (TrainInfo) bundle.getSerializable(TrainInfo.TAG);
+            setTitle(trainInfo.getDetailsTitle());
+            initUI();
 
-        passengerReqVerToken = PassengerReqVerToken.getInstance(this);
-        passengerReqVerToken.setReqVerToken();
+            passengerReqVerToken = PassengerReqVerToken.getInstance(this);
+            passengerReqVerToken.setReqVerToken();
+        }
     }
 
     private void initUI() {
@@ -119,7 +131,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
                     @Override
                     public void onNext(Details details) {
-                        TrainDetails trainDetails = details.Dane.get(0);
+                        trainDetails = details.Dane.get(0);
                         inflateMainDetailsFragment(trainDetails);
                     }
                 });
@@ -145,7 +157,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
                     @Override
                     public void onNext(Tracks tracks) {
-                        ArrayList<Track> trackList = tracks.res;
+                        trackList = tracks.res;
                         inflateTrackFragment(trackList);
                     }
                 });
@@ -176,5 +188,12 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(TRAIN_DETAILS_KEY, trainDetails);
+        outState.putSerializable(TRACK_LIST_KEY, trackList);
     }
 }
