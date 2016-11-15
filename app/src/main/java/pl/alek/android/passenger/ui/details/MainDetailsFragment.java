@@ -19,8 +19,6 @@ import pl.alek.android.passenger.model.TrainDetails;
 
 public class MainDetailsFragment extends Fragment {
 
-    @Bind(R.id.tvTimeTravel)
-    TextView tvTimeTravel;
     @Bind(R.id.tvStartStation)
     TextView tvStartStation;
     @Bind(R.id.tvEndStation)
@@ -45,8 +43,6 @@ public class MainDetailsFragment extends Fragment {
         setRetainInstance(true);
 
         TrainDetails trainDetails = (TrainDetails) getArguments().getSerializable(TrainDetails.TAG);
-        String timeTravel = trainDetails.CzasPodrozy.getTimeTravel();
-        tvTimeTravel.setText(timeTravel);
         Train train = trainDetails.Pociagi.get(0);
         tvStartStation.setText(train.RelacjaPoczatkowa);
         tvEndStation.setText(train.getEndStation());
