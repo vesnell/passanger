@@ -100,6 +100,6 @@ public class TrainInfo implements Serializable {
     }
 
     public String getDetailsTitle() {
-        return StacjaPoczatkowaNazwa + " - " + StacjaKoncowaNazwa;
+        return StacjaPoczatkowaNazwa + " - " + RelacjaKoncowaNazwa;
     }
 }
