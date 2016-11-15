@@ -23,4 +23,5 @@
         Aplikacja jest wersją beta czyli testową i mogą pojawiać się nieoczekiwane błędy.</string>
     <string name="btn_refresh">Odśwież</string>
     <string name="alert_msg_500">Wystąpiły problemy z połączeniem z serwerem. Proszę spróbować później</string>
+    <string name="menu_refresh">Odśwież</string>
 </resources>
