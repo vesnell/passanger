@@ -43,11 +43,13 @@ public class MainDetailsFragment extends Fragment {
         setRetainInstance(true);
 
         TrainDetails trainDetails = (TrainDetails) getArguments().getSerializable(TrainDetails.TAG);
-        Train train = trainDetails.Pociagi.get(0);
-        tvStartStation.setText(train.RelacjaPoczatkowa);
-        tvEndStation.setText(train.getEndStation());
-        tvPlatformTrack.setText(train.getStartPlatformTrack());
-        tvTrainNo.setText(train.getCarrier());
+        if (trainDetails != null) {
+            Train train = trainDetails.Pociagi.get(0);
+            tvStartStation.setText(train.RelacjaPoczatkowa);
+            tvEndStation.setText(train.getEndStation());
+            tvPlatformTrack.setText(train.getStartPlatformTrack());
+            tvTrainNo.setText(train.getCarrier());
+        }
 
         return v;
     }

@@ -70,7 +70,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         holder.llTrackItem.setLayoutParams(params);
 
         Track track = tracks.get(position);
-        holder.stationName.setText(track.StacjaNazwa);
+        holder.stationName.setText(track.getStationName());
         setStrikeTextView(holder.stationName, track.isStationCanceled());
         setLeftItems(holder.llTrackItem, track.isLeftStation());
         String arrivalTime = track.getArrivalTime();

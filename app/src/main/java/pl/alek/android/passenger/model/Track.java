@@ -117,4 +117,16 @@ public class Track implements Serializable {
             return Peron;
         }
     }
+
+    public String getStationName() {
+        String stationName = "";
+        String[] stationNameArr = StacjaNazwa.split(" ");
+        for (int i = 0; i < stationNameArr.length; i++) {
+            stationName += stationNameArr[i].charAt(0) + stationNameArr[i].substring(1).toLowerCase();
+            if (i < stationNameArr.length - 1) {
+                stationName += " ";
+            }
+        }
+        return stationName;
+    }
 }

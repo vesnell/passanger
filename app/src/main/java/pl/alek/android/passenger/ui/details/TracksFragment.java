@@ -46,8 +46,10 @@ public class TracksFragment extends Fragment {
 
         ArrayList<Track> tracks = (ArrayList<Track>) getArguments().getSerializable(Track.TRACK_LIST);
 
-        mAdapter = new TrackAdapter(getContext(), tracks);
-        rvTracks.setAdapter(mAdapter);
+        if (tracks != null) {
+            mAdapter = new TrackAdapter(getContext(), tracks);
+            rvTracks.setAdapter(mAdapter);
+        }
 
         return v;
     }
