@@ -205,7 +205,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private void refresh() {
         initUI();
-        sendRequest();
+        passengerReqVerToken.setReqVerToken();
     }
 
     @Override
