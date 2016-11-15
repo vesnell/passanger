@@ -34,13 +34,15 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         @Bind(R.id.timeDeparture)
         TextView timeDeparture;
         @Bind(R.id.timeDepartureDelay)
-        TextView getTimeDepartureDelay;
+        TextView timeDepartureDelay;
         @Bind(R.id.stationName)
         TextView stationName;
         @Bind(R.id.timeArrival)
         TextView timeArrival;
         @Bind(R.id.timeArrivalDelay)
         TextView timeArrivalDelay;
+        @Bind(R.id.tvPlatformTrack)
+        TextView tvPlatformTrack;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -76,7 +78,19 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
         String departureTime = track.getDepartureTime();
         holder.timeDeparture.setText(departureTime == null ? "" : departureTime);
         setPlannedHour(holder.timeArrival, holder.timeArrivalDelay, track.getArrivalRealTime());
-        setPlannedHour(holder.timeDeparture, holder.getTimeDepartureDelay, track.getDepartureRealTime());
+        setPlannedHour(holder.timeDeparture, holder.timeDepartureDelay, track.getDepartureRealTime());
+        setDelayedColor(holder.timeArrivalDelay, track.getArrivalDelay());
+        setDelayedColor(holder.timeDepartureDelay, track.getDepartureDelay());
+        setPlatformTrack(holder.tvPlatformTrack, track.getPlatformTrack());
+    }
+
+    private void setPlatformTrack(TextView tv, String platformTrack) {
+        if (platformTrack != null) {
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(platformTrack);
+        } else {
+            tv.setVisibility(View.GONE);
+        }
     }
 
     private void setLeftItems(LinearLayout ll, boolean isLeftStation) {
@@ -105,6 +119,16 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.ViewHolder> 
             tvPlannedHour.setPaintFlags(tvPlannedHour.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
             tvPlannedHour.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
             tvDelayedHour.setVisibility(View.GONE);
+        }
+    }
+
+    private void setDelayedColor(TextView tvDelayed, int delay) {
+        if (delay < 5) {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.darkBlue));
+        } else if (delay >= 5 && delay < 15) {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.orange));
+        } else {
+            tvDelayed.setTextColor(ContextCompat.getColor(mContext, R.color.red));
         }
     }
 

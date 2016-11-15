@@ -68,18 +68,18 @@ public class Track implements Serializable {
         return Odwolana;
     }
 
-    private Integer getDepartureDelay() {
+    public Integer getDepartureDelay() {
         if (isDepartureDelay()) {
             return OdjazdOpoznienie.Minutes;
         }
-        return null;
+        return 0;
     }
 
-    private Integer getArrivalDelay() {
+    public Integer getArrivalDelay() {
         if (isArrivalDelay()) {
             return PrzyjazdOpoznienie.Minutes;
         }
-        return null;
+        return 0;
     }
 
     public String getDepartureTime() {
@@ -97,16 +97,24 @@ public class Track implements Serializable {
     }
 
     public String getDepartureRealTime() {
-        if (isDepartureDelay() && getDepartureDelay() != null) {
-            return ModelUtils.getHourInString(OdjazdRzecz) + "(+" + Integer.toString(getDepartureDelay()) + ")";
+        if (isDepartureDelay() && getDepartureDelay() != 0) {
+            return ModelUtils.getHourInString(OdjazdRzecz) + " (+" + Integer.toString(getDepartureDelay()) + ")";
         }
         return null;
     }
 
     public String getArrivalRealTime() {
-        if (isArrivalDelay() && getArrivalDelay() != null) {
-            return ModelUtils.getHourInString(PrzyjazdRzecz) + "(+" + Integer.toString(getArrivalDelay()) + ")";
+        if (isArrivalDelay() && getArrivalDelay() != 0) {
+            return ModelUtils.getHourInString(PrzyjazdRzecz) + " (+" + Integer.toString(getArrivalDelay()) + ")";
         }
         return null;
+    }
+
+    public String getPlatformTrack() {
+        if (Tor != null) {
+            return Peron + " / " + Tor;
+        } else {
+            return Peron;
+        }
     }
 }
