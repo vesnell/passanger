@@ -42,6 +42,7 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
 
     private static final String TRACK_LIST_KEY = "trackListKey";
     private static final String TRAIN_DETAILS_KEY = "trainDetailsKey";
+    private static final String TRAIN_INFO_KEY = "trainInfoKey";
 
     @Bind(R.id.mainDetailsContainer)
     LinearLayout mainDetailsContainer;
@@ -63,9 +64,11 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
+        passengerReqVerToken = PassengerReqVerToken.getInstance(this);
         if (savedInstanceState != null) {
             trainDetails = (TrainDetails) savedInstanceState.getSerializable(TRAIN_DETAILS_KEY);
             trackList = (ArrayList<Track>) savedInstanceState.getSerializable(TRACK_LIST_KEY);
+            trainInfo = (TrainInfo) savedInstanceState.getSerializable(TRAIN_INFO_KEY);
             inflateMainDetailsFragment(trainDetails);
             inflateTrackFragment(trackList);
         } else {
@@ -74,7 +77,6 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
             setTitle(trainInfo.getDetailsTitle());
             initUI();
 
-            passengerReqVerToken = PassengerReqVerToken.getInstance(this);
             passengerReqVerToken.setReqVerToken();
         }
     }
@@ -221,5 +223,6 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         super.onSaveInstanceState(outState);
         outState.putSerializable(TRAIN_DETAILS_KEY, trainDetails);
         outState.putSerializable(TRACK_LIST_KEY, trackList);
+        outState.putSerializable(TRAIN_INFO_KEY, trainInfo);
     }
 }
