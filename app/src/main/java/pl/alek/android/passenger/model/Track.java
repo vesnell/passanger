@@ -70,14 +70,14 @@ public class Track implements Serializable {
 
     public Integer getDepartureDelay() {
         if (isDepartureDelay()) {
-            return OdjazdOpoznienie.Minutes;
+            return OdjazdOpoznienie.getTimeTravelInMinutes();
         }
         return 0;
     }
 
     public Integer getArrivalDelay() {
         if (isArrivalDelay()) {
-            return PrzyjazdOpoznienie.Minutes;
+            return PrzyjazdOpoznienie.getTimeTravelInMinutes();
         }
         return 0;
     }

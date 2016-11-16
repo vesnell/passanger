@@ -7,6 +7,10 @@ import java.io.Serializable;
  */
 
 public class TimeTravel implements Serializable {
+
+    private static final int MIUTES_IN_HOUR = 60;
+    private static final int HOURS_IN_DAY = 24;
+
     public Long Ticks;
     public Integer Days;
     public Integer Hours;
@@ -28,5 +32,16 @@ public class TimeTravel implements Serializable {
             time += Integer.toString(Hours) + "h ";
         }
         return time += Integer.toString(Minutes) + "min";
+    }
+
+    public Integer getTimeTravelInMinutes() {
+        Integer time = 0;
+        if (Days > 0) {
+            time += Days * HOURS_IN_DAY * MIUTES_IN_HOUR;
+        }
+        if (Hours > 0) {
+            time += Hours * MIUTES_IN_HOUR;
+        }
+        return time += Minutes;
     }
 }

@@ -9,8 +9,8 @@ android {
         applicationId "pl.alek.android.passenger"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 9
-        versionName "1.8"
+        versionCode 10
+        versionName "1.81"
     }
     buildTypes {
         debug {
