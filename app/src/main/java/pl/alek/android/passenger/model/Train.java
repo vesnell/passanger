@@ -10,6 +10,9 @@ import pl.alek.android.passenger.model.util.ModelUtils;
  */
 
 public class Train implements Serializable {
+
+    public static final String TAG = "Train";
+
     public String KategoriaHandlowaNazwa;
     public String PrzewoznikNazwa;
     public String KategoriaSzybkosciNazwa;

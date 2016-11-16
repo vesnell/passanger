@@ -2,9 +2,9 @@ package pl.alek.android.passenger.ui.details;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,36 +13,20 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.alek.android.passenger.R;
-import pl.alek.android.passenger.model.Details;
-import pl.alek.android.passenger.model.Track;
-import pl.alek.android.passenger.model.Tracks;
 import pl.alek.android.passenger.model.Train;
-import pl.alek.android.passenger.model.TrainDetails;
 import pl.alek.android.passenger.model.TrainInfo;
-import pl.alek.android.passenger.online.PassengerReqVerToken;
-import pl.alek.android.passenger.rest.manager.DetailsManager;
-import pl.alek.android.passenger.rest.manager.TracksManager;
-import rx.Observer;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 10.11.2016.
  */
 
-public class TrainDetailsActivity extends AppCompatActivity implements PassengerReqVerToken.OnDownloadRequestTokenListener {
+public class TrainDetailsActivity extends AppCompatActivity implements MainDetailsFragment.DetailsCallback,
+        TracksFragment.TracksCallback {
 
     private static final String TAG = "TrainDetailsActivity";
-
-    private static final String TRACK_LIST_KEY = "trackListKey";
-    private static final String TRAIN_DETAILS_KEY = "trainDetailsKey";
-    private static final String TRAIN_INFO_KEY = "trainInfoKey";
 
     @Bind(R.id.mainDetailsContainer)
     LinearLayout mainDetailsContainer;
@@ -51,12 +35,10 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
     @Bind(R.id.progressBarMainDetails)
     ProgressBar progressBarMainDetails;
 
-    private Subscription subscription;
-
+    private FragmentManager fm;
+    private MainDetailsFragment mainDetailsFragment;
+    private TracksFragment tracksFragment;
     private TrainInfo trainInfo;
-    private PassengerReqVerToken passengerReqVerToken;
-    private TrainDetails trainDetails;
-    private ArrayList<Track> trackList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +46,35 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         setContentView(R.layout.activity_details);
         ButterKnife.bind(this);
 
-        passengerReqVerToken = PassengerReqVerToken.getInstance(this);
-        if (savedInstanceState != null) {
-            trainDetails = (TrainDetails) savedInstanceState.getSerializable(TRAIN_DETAILS_KEY);
-            trackList = (ArrayList<Track>) savedInstanceState.getSerializable(TRACK_LIST_KEY);
-            trainInfo = (TrainInfo) savedInstanceState.getSerializable(TRAIN_INFO_KEY);
-            inflateMainDetailsFragment(trainDetails);
-            inflateTrackFragment(trackList);
-        } else {
-            Bundle bundle = getIntent().getExtras();
-            trainInfo = (TrainInfo) bundle.getSerializable(TrainInfo.TAG);
-            setTitle(trainInfo.getDetailsTitle());
-            initUI();
+        fm = getSupportFragmentManager();
 
-            passengerReqVerToken.setReqVerToken();
+        Bundle bundle = getIntent().getExtras();
+        trainInfo = (TrainInfo) bundle.getSerializable(TrainInfo.TAG);
+        setTitle(trainInfo.getDetailsTitle());
+
+        if (savedInstanceState == null) {
+            init();
+        }
+    }
+
+    private void init() {
+        initUI();
+        setMainDetailsFragment();
+    }
+
+    private void setMainDetailsFragment() {
+        mainDetailsFragment = (MainDetailsFragment) fm.findFragmentByTag(MainDetailsFragment.TAG);
+        if (mainDetailsFragment == null) {
+            mainDetailsFragment = MainDetailsFragment.createInstance(trainInfo);
+            inflateFragment(mainDetailsContainer, mainDetailsFragment, MainDetailsFragment.TAG);
+        }
+    }
+
+    private void setTracksFragment(Train train) {
+        tracksFragment = (TracksFragment) fm.findFragmentByTag(TracksFragment.TAG);
+        if (tracksFragment == null) {
+            tracksFragment = TracksFragment.createInstance(train);
+            inflateFragment(trackContainer, tracksFragment, TracksFragment.TAG);
         }
     }
 
@@ -105,86 +102,37 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
         }
     }
 
-    @Override
-    public void onSuccess() {
-        sendRequest();
-    }
-
-    @Override
-    public void onError(String msg) {
-        cleanUI(msg);
-        Log.e(TAG, msg);
-    }
-
-    private void sendRequest() {
-        final DetailsManager detailsManager = new DetailsManager();
-        subscription = detailsManager.getDetails(trainInfo)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Details>() {
-                    @Override
-                    public void onCompleted() {
-                        setMainDetailsVisible(true);
-                        getTracks(detailsManager.details.Dane.get(0).Pociagi.get(0));
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        cleanUI(e.getLocalizedMessage());
-                        Log.e(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(Details details) {
-                        trainDetails = details.Dane.get(0);
-                        inflateMainDetailsFragment(trainDetails);
-                    }
-                });
-    }
-
-    private void getTracks(Train train) {
-        setTrackDetailsVisible(false);
-        TracksManager tracksManager = new TracksManager();
-        subscription = tracksManager.getTracks(train)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Tracks>() {
-                    @Override
-                    public void onCompleted() {
-                        setTrackDetailsVisible(true);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        cleanUI(e.getLocalizedMessage());
-                        Log.e(TAG, e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(Tracks tracks) {
-                        trackList = tracks.res;
-                        inflateTrackFragment(trackList);
-                    }
-                });
-    }
-
-    private void inflateMainDetailsFragment(TrainDetails trainDetails) {
-        inflateFragment(mainDetailsContainer, MainDetailsFragment.createInstance(trainDetails));
-    }
-
-    private void inflateTrackFragment(ArrayList<Track> trackList) {
-        inflateFragment(trackContainer, TracksFragment.createInstance(trackList));
-    }
-
-    private void inflateFragment(LinearLayout container, Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(container.getId(), fragment);
+    private void inflateFragment(LinearLayout container, Fragment fragment, String tag) {
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(container.getId(), fragment, tag);
         fragmentTransaction.commit();
     }
 
     private void cleanUI(String msg) {
         progressBarMainDetails.setVisibility(View.GONE);
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCompletedDetails(Train train) {
+        setMainDetailsVisible(true);
+        setTrackDetailsVisible(false);
+        setTracksFragment(train);
+    }
+
+    @Override
+    public void onErrorDetails(String msg) {
+        cleanUI(msg);
+    }
+
+    @Override
+    public void onCompletedTracks() {
+        setTrackDetailsVisible(true);
+    }
+
+    @Override
+    public void onErrorTracks(String msg) {
+        cleanUI(msg);
     }
 
     @Override
@@ -206,23 +154,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements Passenger
     }
 
     private void refresh() {
-        initUI();
-        passengerReqVerToken.setReqVerToken();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(TRAIN_DETAILS_KEY, trainDetails);
-        outState.putSerializable(TRACK_LIST_KEY, trackList);
-        outState.putSerializable(TRAIN_INFO_KEY, trainInfo);
+        inflateFragment(mainDetailsContainer, null, MainDetailsFragment.TAG);
+        inflateFragment(trackContainer, null, TracksFragment.TAG);
+        init();
     }
 }
