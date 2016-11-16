@@ -47,6 +47,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements MainDetai
         ButterKnife.bind(this);
 
         fm = getSupportFragmentManager();
+        mainDetailsFragment = (MainDetailsFragment) fm.findFragmentByTag(MainDetailsFragment.TAG);
+        tracksFragment = (TracksFragment) fm.findFragmentByTag(TracksFragment.TAG);
 
         Bundle bundle = getIntent().getExtras();
         trainInfo = (TrainInfo) bundle.getSerializable(TrainInfo.TAG);
@@ -63,7 +65,6 @@ public class TrainDetailsActivity extends AppCompatActivity implements MainDetai
     }
 
     private void setMainDetailsFragment() {
-        mainDetailsFragment = (MainDetailsFragment) fm.findFragmentByTag(MainDetailsFragment.TAG);
         if (mainDetailsFragment == null) {
             mainDetailsFragment = MainDetailsFragment.createInstance(trainInfo);
             inflateFragment(mainDetailsContainer, mainDetailsFragment, MainDetailsFragment.TAG);
@@ -71,7 +72,6 @@ public class TrainDetailsActivity extends AppCompatActivity implements MainDetai
     }
 
     private void setTracksFragment(Train train) {
-        tracksFragment = (TracksFragment) fm.findFragmentByTag(TracksFragment.TAG);
         if (tracksFragment == null) {
             tracksFragment = TracksFragment.createInstance(train);
             inflateFragment(trackContainer, tracksFragment, TracksFragment.TAG);
@@ -154,8 +154,8 @@ public class TrainDetailsActivity extends AppCompatActivity implements MainDetai
     }
 
     private void refresh() {
-        inflateFragment(mainDetailsContainer, null, MainDetailsFragment.TAG);
-        inflateFragment(trackContainer, null, TracksFragment.TAG);
+        mainDetailsFragment = null;
+        tracksFragment = null;
         init();
     }
 }
