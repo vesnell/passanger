@@ -181,7 +181,7 @@ public class StationInfoActivity extends AppCompatActivity implements PassengerR
     private void refreshRequestParams() {
         if (requestsIterator < MAX_SEND_REFRESH_REG_TOKEN_REQUESTS) {
             requestsIterator++;
-            passengerReqVerToken.setReqVerToken();
+            passengerReqVerToken.setReqVerToken(this);
         } else {
             setEmptyInfo();
             showAlertDialog(R.string.alert_msg_500);

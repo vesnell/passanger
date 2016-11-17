@@ -200,7 +200,7 @@ public class MainFragment extends Fragment implements PassengerReqVerToken.OnDow
 
     private void trySetReqVerToken() {
         isWaitingForResponse = true;
-        passengerReqVerToken.setReqVerToken();
+        passengerReqVerToken.setReqVerToken(getActivity());
     }
 
     @Override

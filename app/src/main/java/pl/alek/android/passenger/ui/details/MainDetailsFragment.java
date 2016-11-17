@@ -68,7 +68,7 @@ public class MainDetailsFragment extends Fragment implements PassengerReqVerToke
         if (savedInstanceState == null) {
             passengerReqVerToken = PassengerReqVerToken.getInstance(this);
             trainInfo = (TrainInfo) getArguments().getSerializable(TrainInfo.TAG);
-            passengerReqVerToken.setReqVerToken();
+            passengerReqVerToken.setReqVerToken(getActivity());
         } else {
             trainDetails = (TrainDetails) savedInstanceState.getSerializable(TrainDetails.TAG);
             setUI();

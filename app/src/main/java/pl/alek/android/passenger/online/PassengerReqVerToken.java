@@ -1,5 +1,6 @@
 package pl.alek.android.passenger.online;
 
+import android.app.Activity;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -44,56 +45,66 @@ public class PassengerReqVerToken {
         this.listener = listener;
     }
 
-    public void setReqVerToken() {
+    public void setReqVerToken(final Activity activity) {
         Request request = new Request.Builder()
                 .url(TRACK_URL)
                 .build();
         RestAPI.client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                onErrorMsg(e.getMessage(), e.getLocalizedMessage());
+                onErrorMsg(activity, e.getMessage(), e.getLocalizedMessage());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                onOpenResponse(response);
+                onOpenResponse(activity, response);
             }
         });
     }
 
-    private void onOpenResponse(final Response response) {
+    private void onOpenResponse(Activity activity, final Response response) {
         try {
             ResponseBody responseBody = response.body();
             String bodyHtml = responseBody.string();
             responseBody.close();
-            parseBody(bodyHtml);
+            parseBody(activity, bodyHtml);
         } catch (IOException e) {
-            onErrorMsg(e.getMessage(), e.getLocalizedMessage());
+            onErrorMsg(activity, e.getMessage(), e.getLocalizedMessage());
         }
     }
 
-    private void parseBody(String bodyHtml) throws IOException {
+    private void parseBody(Activity activity, String bodyHtml) throws IOException {
         Document doc = Jsoup.parse(bodyHtml);
         if (doc != null) {
             Element input = doc.select("input[name=" + PassengerInterface.REQ_VER_TOK + "]").first();
             if (input != null) {
                 reqVerToken = input.attr("value");
-                onSuccessMsg();
+                onSuccessMsg(activity);
             } else {
-                onErrorMsg("Empty body", "Could not get html body of Portal Pasażera");
+                onErrorMsg(activity, "Empty body", "Could not get html body of Portal Pasażera");
             }
         } else {
-            onErrorMsg("Empty body", "Could not get html body of Portal Pasażera");
+            onErrorMsg(activity, "Empty body", "Could not get html body of Portal Pasażera");
         }
     }
 
-    private void onSuccessMsg() {
-        listener.onSuccess();
+    private void onSuccessMsg(Activity activity) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listener.onSuccess();
+            }
+        });
     }
 
-    private void onErrorMsg(String msg, final String locMsg) {
+    private void onErrorMsg(Activity activity, String msg, final String locMsg) {
         Log.e(TAG, msg);
-        listener.onError(locMsg);
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                listener.onError(locMsg);
+            }
+        });
     }
 
     public static Map<String, Object> getStationInfoParams(Integer stationID) {

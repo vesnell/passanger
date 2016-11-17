@@ -69,7 +69,7 @@ public class TracksFragment extends Fragment implements PassengerReqVerToken.OnD
         if (savedInstanceState == null) {
             passengerReqVerToken = PassengerReqVerToken.getInstance(this);
             train = (Train) getArguments().getSerializable(Train.TAG);
-            passengerReqVerToken.setReqVerToken();
+            passengerReqVerToken.setReqVerToken(getActivity());
         } else {
             trackList = (ArrayList<Track>) savedInstanceState.getSerializable(Track.TRACK_LIST);
             setUI();
